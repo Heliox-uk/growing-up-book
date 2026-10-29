@@ -1,0 +1,885 @@
+<title>Growing Up Book</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&family=Caveat:wght@500;700&display=swap">
+<style>
+/* Meadow theme. Layout: a family keepsake. Child chips up top, one child's page below (growth / milestones / letters),
+   and a "side by side" view with a pencil-marked doorframe. */
+:root{
+  --bg:#F6F8F1; --surface:#FFFFFF; --sunk:#ECF0E4; --ink:#262B22; --muted:#5C6455; --line:#D4DBC8;
+  --accent:#262B22; --accent-ink:#F6F8F1; --paper:#FFFFFF; --paper-line:#E3EAD6;
+  --wood:#E8D9B8; --wood-edge:#CDB98E; --wood-ink:#6B5428; --danger:#B3392B;
+  --c0:#5E8C2F; --c1:#4A6FB5; --c2:#C9703A; --c3:#C2557E; --c4:#A68412;
+  --p0:#DCEBC4; --p1:#D9E3F7; --p2:#FFE0CC; --p3:#F6D3E1; --p4:#FBE7A6;
+  --q0:#3A4F1E; --q1:#33466E; --q2:#6E4126; --q3:#6E2F48; --q4:#665214;
+  --f-display:"Young Serif", Georgia, "Times New Roman", serif;
+  --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-hand:"Caveat", "Segoe Print", "Bradley Hand", cursive;
+  --r:20px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141912; --surface:#1C2319; --sunk:#252E21; --ink:#E8EDE1; --muted:#A2AC97; --line:#33402D;
+  --accent:#C9E3A6; --accent-ink:#1A2312; --paper:#1F271C; --paper-line:#2E3929;
+  --wood:#4A3E28; --wood-edge:#5E4F34; --wood-ink:#E3CB98; --danger:#F08A7A;
+  --c0:#9CCB6B; --c1:#8FB0EE; --c2:#F0A06E; --c3:#EB8FB5; --c4:#E2C35A;
+  --p0:#2C3A22; --p1:#232C40; --p2:#3D2A1F; --p3:#3A2330; --p4:#3A3317;
+  --q0:#C9E3A6; --q1:#B9CBF2; --q2:#F6C3A0; --q3:#F0B5CC; --q4:#EFD889; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141912; --surface:#1C2319; --sunk:#252E21; --ink:#E8EDE1; --muted:#A2AC97; --line:#33402D;
+  --accent:#C9E3A6; --accent-ink:#1A2312; --paper:#1F271C; --paper-line:#2E3929;
+  --wood:#4A3E28; --wood-edge:#5E4F34; --wood-ink:#E3CB98; --danger:#F08A7A;
+  --c0:#9CCB6B; --c1:#8FB0EE; --c2:#F0A06E; --c3:#EB8FB5; --c4:#E2C35A;
+  --p0:#2C3A22; --p1:#232C40; --p2:#3D2A1F; --p3:#3A2330; --p4:#3A3317;
+  --q0:#C9E3A6; --q1:#B9CBF2; --q2:#F6C3A0; --q3:#F0B5CC; --q4:#EFD889; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 48px}
+#app{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;text-wrap:balance;letter-spacing:-.005em}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+/* Buttons */
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn.quiet{background:transparent;border-color:transparent;color:var(--muted);padding-inline:10px}
+.btn.quiet:hover{color:var(--ink);border-color:var(--line)}
+.btn.danger{color:var(--danger)}
+.btn.danger.armed{background:var(--danger);color:var(--surface);border-color:var(--danger)}
+
+/* Header */
+.top{display:flex;flex-direction:column;gap:14px}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.brand h1{font-size:26px}
+.brand .hand{font-family:var(--f-hand);font-size:22px;color:var(--muted)}
+.kids{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px 7px 10px;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
+.chip .dot{width:12px;height:12px;border-radius:50%;background:var(--kid)}
+.chip[aria-pressed="true"]{background:var(--kidp,var(--p1));color:var(--ink);border-color:transparent;font-weight:700}
+.chip.cmp .dot{background:conic-gradient(var(--c0) 0 33%,var(--c1) 0 66%,var(--c2) 0)}
+.chip.add{border-style:dashed;color:var(--muted);padding-left:14px}
+
+.banner{background:var(--sunk);border-radius:var(--r);padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.banner b{font-weight:700}
+
+/* Child hero */
+.hero{background:var(--kidp);border-radius:var(--r);padding:22px;display:grid;gap:18px}
+.hero-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.hero h1{color:var(--ink);font-size:clamp(30px,6vw,44px);line-height:1.05}
+.hero .sub{color:var(--kidq);margin-top:6px}
+.hero .btn.quiet{color:var(--kidq)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0}
+.stats>div{background:var(--tb);color:var(--ink);border-radius:14px;padding:12px 14px;min-width:0;--tb:var(--sunk);--tq:var(--muted)}
+.stats>div:nth-child(1){--tb:var(--p4);--tq:var(--q4)}.stats>div:nth-child(2){--tb:var(--p3);--tq:var(--q3)}.stats>div:nth-child(3){--tb:var(--p1);--tq:var(--q1)}.stats>div:nth-child(4){--tb:var(--p2);--tq:var(--q2)}
+.stats dt{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--tq);font-weight:700}
+.stats dd{margin:2px 0 0;font-family:var(--f-display);font-size:24px;font-variant-numeric:tabular-nums}
+.stats dd small{font-family:var(--f-body);font-size:13px;color:var(--tq)}
+.stats .delta{font-size:12.5px;color:var(--tq)}
+@media (max-width:640px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Tabs */
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{background:none;border:none;padding:8px 16px;font-weight:600;color:var(--muted);border-radius:999px}
+.tab:hover{background:var(--sunk)}
+.tab[aria-selected="true"]{color:var(--bg);background:var(--ink)}
+.tab .n{font-weight:500;font-size:12px;opacity:.75;margin-left:5px}
+
+.sec{display:flex;flex-direction:column;gap:16px}
+.sec-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.sec-head h2{font-size:22px}
+.card{background:var(--surface);border-radius:var(--r);padding:16px}
+.charts2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.charts2{grid-template-columns:minmax(0,1fr)}}
+figure{margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:600}
+figcaption span{font-weight:400;font-size:13px;color:var(--muted)}
+.chart{width:100%;min-height:120px}
+.chart svg{display:block}
+.chart text{font-family:var(--f-body)}
+.chart-empty{padding:28px 0;text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13.5px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:3px;border-radius:2px;background:var(--kid)}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:none}
+td.r,th.r{text-align:right}
+td.note{color:var(--muted);min-width:140px}
+.rowbtn{background:none;border:none;color:var(--muted);font-weight:600;font-size:13px;padding:2px 6px;border-radius:6px}
+.rowbtn:hover{color:var(--ink);background:var(--sunk)}
+
+/* Milestones */
+.ages{display:flex;flex-direction:column;gap:22px}
+.age-group h3{font-size:17px;margin-bottom:10px;display:flex;align-items:baseline;gap:10px}
+.age-group h3 span{font-family:var(--f-body);font-size:13px;color:var(--muted)}
+.mlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.mlist li{--tb:var(--surface);--tq:var(--muted);background:var(--tb);border-radius:16px;padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px}
+.mlist li.t-yel{--tb:var(--p4);--tq:var(--q4)}.mlist li.t-rose{--tb:var(--p3);--tq:var(--q3)}.mlist li.t-blue{--tb:var(--p1);--tq:var(--q1)}.mlist li.t-apr{--tb:var(--p2);--tq:var(--q2)}.mlist li.t-pis{--tb:var(--p0);--tq:var(--q0)}
+.mlist li .rowbtn{color:var(--tq)}
+.mlist .t{font-weight:600}
+.mlist .d{font-size:13px;color:var(--tq);grid-column:1}
+.mlist .nt{grid-column:1/-1;font-family:var(--f-hand);font-size:20px;line-height:1.3;white-space:pre-wrap}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;letter-spacing:.03em;padding:2px 8px;border-radius:999px;background:var(--surface);color:var(--tq,var(--muted));margin-left:6px;vertical-align:1px}
+
+/* Letters */
+.letters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.letters{grid-template-columns:minmax(0,1fr)}}
+.letter{background:var(--paper);border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;min-width:0;
+  background-image:repeating-linear-gradient(to bottom,transparent 0 31px,var(--paper-line) 31px 32px);background-position:0 70px;background-repeat:no-repeat}
+.letter h3{font-size:19px}
+.letter .meta{font-size:13px;color:var(--muted)}
+.letter .body{font-family:var(--f-hand);font-size:23px;line-height:32px;white-space:pre-wrap;overflow-wrap:anywhere}
+.letter .body.clip{max-height:160px;overflow:hidden;-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.letter footer{display:flex;gap:6px;margin-top:auto;flex-wrap:wrap}
+
+/* Compare */
+.cmp-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:820px){.cmp-grid{grid-template-columns:minmax(0,1fr)}}
+.seg{display:inline-flex;background:var(--sunk);border-radius:999px;padding:3px}
+.seg button{border:none;background:none;padding:6px 14px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.dot-s{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--kid);margin-right:6px}
+
+/* Welcome */
+.welcome{background:var(--surface);border-radius:var(--r);padding:clamp(22px,5vw,44px);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:center}
+@media (max-width:720px){.welcome{grid-template-columns:minmax(0,1fr)}}
+.welcome h2{font-size:clamp(28px,5vw,40px);line-height:1.1;margin-bottom:12px}
+.welcome p{max-width:52ch;color:var(--muted)}
+.welcome .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.welcome ul{margin:16px 0 0;padding-left:18px;color:var(--muted);display:grid;gap:4px}
+.mini-door{width:100%;max-width:240px;justify-self:center}
+
+/* Dialog */
+dialog{border:none;border-radius:18px;padding:0;background:var(--surface);color:var(--ink);width:min(520px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
+dialog::backdrop{background:rgba(10,18,15,.45)}
+dialog form{display:flex;flex-direction:column;gap:14px;padding:22px}
+dialog h2{font-size:22px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label,.field .lbl{font-size:13px;font-weight:600}
+.field .hint{font-size:12.5px;color:var(--muted)}
+.field input,.field select,.field textarea{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:9px 11px;width:100%}
+.field textarea{resize:vertical;min-height:90px}
+.field textarea.hand{font-family:var(--f-hand);font-size:22px;line-height:1.35;min-height:220px;background:var(--paper)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.swatches{display:flex;gap:10px}
+.swatches label{width:34px;height:34px;border-radius:50%;background:var(--kid);display:grid;place-items:center;cursor:pointer;border:3px solid transparent}
+.swatches input{position:absolute;opacity:0;pointer-events:none}
+.swatches input:checked+span{width:12px;height:12px;border-radius:50%;background:var(--surface)}
+.swatches label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.dlg-acts{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:4px}
+.dlg-acts>div{display:flex;gap:8px}
+.err{color:var(--danger);font-size:13.5px}
+.warn{font-size:13px;color:var(--danger)}
+
+/* Setup */
+.setup{display:flex;flex-direction:column;gap:14px;max-width:760px}
+.steps{margin:0;padding-left:22px;display:grid;gap:10px}
+code{background:var(--sunk);padding:1px 6px;border-radius:6px;font-size:13px;overflow-wrap:anywhere}
+.setup a{color:var(--c1)}
+
+/* Photos */
+.brand .spacer{flex:1}
+.bdays{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:10px}
+.slot{aspect-ratio:1;max-width:100%;border-radius:12px;overflow:hidden;position:relative;background:var(--sunk);border:none;padding:0;display:block;width:100%}
+.slot img{width:100%;height:100%;object-fit:cover;display:block}
+.slot .lab{position:absolute;inset:auto 0 0 0;padding:16px 8px 6px;font-size:12.5px;font-weight:700;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.6));text-align:left}
+.slot.empty-slot{border:1.5px dashed var(--line);background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted)}
+.slot.empty-slot .lab{position:static;background:none;color:var(--ink);padding:0}
+.slot.empty-slot span{font-size:12px}
+.slot.empty-slot:hover{border-color:var(--kid)}
+.mlist li.ph-item{padding:8px}
+.ph-btn{grid-column:1/-1;border:none;padding:0;background:none;border-radius:8px;overflow:hidden;display:block}
+.ph-btn img{width:100%;max-height:420px;object-fit:cover;display:block}
+.ph-item .t,.ph-item .d{padding-inline:6px}
+.lightbox img{width:100%;max-height:70dvh;object-fit:contain;border-radius:10px;background:var(--sunk)}
+.preview{max-height:220px;width:100%;object-fit:contain;border-radius:10px;background:var(--sunk)}
+.check{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:600}
+.check input{width:18px;height:18px}
+.file-btn{position:relative;overflow:hidden}
+.file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.status-line{font-size:13.5px;color:var(--muted)}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;max-width:calc(100vw - 32px);z-index:20}
+.empty{padding:28px;text-align:center;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);display:flex;flex-direction:column;gap:12px;align-items:center}
+.empty .hand{font-family:var(--f-hand);font-size:24px;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div id="app" aria-live="polite"><p class="muted">Opening your book…</p></div>
+<dialog id="dlg"><form id="frm" novalidate></form></dialog>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function D(s){const [y,m,d]=s.split('-').map(Number);return Date.UTC(y,m-1,d);}
+function fmtDate(s){return new Date(D(s)).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});}
+function fmtMonth(s){return new Date(D(s)).toLocaleDateString('en-GB',{month:'short',year:'numeric',timeZone:'UTC'});}
+function addYears(s,n){const [y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y+n,m-1,d)).toISOString().slice(0,10);}
+function addMonths(s,n){const [y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1+n,d)).toISOString().slice(0,10);}
+function ageYears(dob,s){return (D(s)-D(dob))/(365.2425*864e5);}
+function monthsBetween(a,b){const [y1,m1,d1]=a.split('-').map(Number),[y2,m2,d2]=b.split('-').map(Number);let mo=(y2-y1)*12+(m2-m1);if(d2<d1)mo--;return mo;}
+const pl=(n,w)=>n+' '+w+(n===1?'':'s');
+function ageText(dob,s){
+  if(D(s)<D(dob))return 'before birth';
+  const mo=monthsBetween(dob,s);
+  if(mo<1){const days=Math.round((D(s)-D(dob))/864e5);return days<14?pl(days,'day'):pl(Math.floor(days/7),'week');}
+  if(mo<24)return pl(mo,'month');
+  const y=Math.floor(mo/12),r=mo%12;return pl(y,'year')+(r?', '+pl(r,'month'):'');
+}
+function untilText(s){
+  const t=todayStr();if(D(s)<=D(t))return 'ready to open';
+  const mo=monthsBetween(t,s);if(mo<1)return 'in '+pl(Math.max(1,Math.round((D(s)-D(t))/864e5)),'day');
+  if(mo<24)return 'in '+pl(mo,'month');return 'in '+pl(Math.floor(mo/12),'year');
+}
+function ordinal(n){const s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+const fmt1=n=>(Math.round(n*10)/10).toFixed(1);
+const fmtKg=n=>(Math.round(n*100)/100).toFixed(n<10?2:1);
+const newId=p=>p+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+
+/* ---------- state ---------- */
+/* Paste your Google Client ID between the quotes to skip the setup screen on every device. */
+const CLIENT_ID='';
+let status='setup',storeRecs={},sampleRecs=null,sample=false,signinMsg='';
+let view={child:null,tab:'growth',metric:'height'};
+let editing=null,deleteArmed=false,openLetters=new Set(),chartSpecs={};
+try{const v=JSON.parse(localStorage.getItem('gub-view')||'null');if(v&&typeof v==='object')view=Object.assign(view,v);}catch(e){}
+if(view.tab==='milestones')view.tab='timeline';
+function remember(){try{localStorage.setItem('gub-view',JSON.stringify(view));}catch(e){}}
+const cur=()=>sample?sampleRecs:storeRecs;
+
+function children(R){return Object.entries(R).filter(([,v])=>v.kind==='child').map(([id,v])=>Object.assign({id},v)).sort((a,b)=>(a.dob||'').localeCompare(b.dob||''));}
+function recs(R,cid,kind,desc){const a=Object.entries(R).filter(([,v])=>v.kind===kind&&v.childId===cid).map(([id,v])=>Object.assign({id},v));a.sort((x,y)=>(x.date||x.written||'').localeCompare(y.date||y.written||''));return desc?a.reverse():a;}
+
+/* ---------- example family (never saved) ---------- */
+function buildSample(){
+  const R={};
+  const kids=[{id:'ex_maya',name:'Maya',dob:'2019-03-14',color:0},{id:'ex_theo',name:'Theo',dob:'2022-07-02',color:1}];
+  kids.forEach(k=>R[k.id]={kind:'child',name:k.name,dob:k.dob,color:k.color});
+  const mm=[[0,49.1,3.2,'Birth'],[6,65.7,7.3,''],[12,74,8.9,'1-year review'],[24,85.7,11.5,''],[36,95.1,14.1,''],[48,102.7,16.1,'Nursery check'],[60,109.4,18.2,''],[72,115.1,20.2,''],[84,120.8,22.4,'School nurse']];
+  const tm=[[0,49.9,3.35,'Birth'],[2,58.4,5.6,'8-week check'],[6,67.6,7.9,''],[12,75.7,9.6,''],[24,87.1,12.2,'2-year review'],[36,96.1,14.3,''],[48,103.3,16.3,'']];
+  mm.forEach((m,i)=>R['ex_mm'+i]={kind:'measure',childId:'ex_maya',date:addMonths('2019-03-14',m[0]),heightCm:m[1],weightKg:m[2],note:m[3]});
+  tm.forEach((m,i)=>R['ex_tm'+i]={kind:'measure',childId:'ex_theo',date:addMonths('2022-07-02',m[0]),heightCm:m[1],weightKg:m[2],note:m[3]});
+  [['ex_maya','2019-05-02','First proper smile','Firsts','At Grandma\'s kitchen table.'],
+   ['ex_maya','2020-01-20','First steps','Movement','Three wobbly steps to the sofa.'],
+   ['ex_maya','2020-04-11','First word: "duck"','Words','Said it to every bird, including pigeons.'],
+   ['ex_maya','2023-09-06','Started Reception','School','Red book bag, refused to let go of it.'],
+   ['ex_maya','2025-08-15','Rode a bike without stabilisers','Movement','Round the whole park twice.'],
+   ['ex_theo','2023-02-10','First tooth','Teeth','Bottom front, left.'],
+   ['ex_theo','2023-06-28','First steps','Movement',''],
+   ['ex_theo','2024-03-03','Calls Maya "Mimi"','Words','Still does.'],
+   ['ex_theo','2026-09-08','First day at nursery','School','Didn\'t look back once.']
+  ].forEach((m,i)=>R['ex_ml'+i]={kind:'milestone',childId:m[0],date:m[1],title:m[2],category:m[3],note:m[4]});
+  R.ex_l1={kind:'letter',childId:'ex_maya',written:'2026-03-14',title:'On your 7th birthday',
+    body:'Dear Maya,\n\nToday you turned seven and asked for a cake shaped like a volcano. Dad stayed up until midnight making it erupt.\n\nYou are kind to your little brother even when he knocks down your towers. I hope you keep that.\n\nAll my love,\nMum'};
+  R.ex_l2={kind:'letter',childId:'ex_theo',written:'2022-07-09',title:'Your first week',
+    body:'Dear Theo,\n\nYou are one week old and you only sleep when someone is walking. We have walked a lot of miles around the kitchen.\n\nWelcome to the family.'};
+  return R;
+}
+
+/* ---------- storage: a private app folder in your own Google Drive ---------- */
+const SCOPE='https://www.googleapis.com/auth/drive.appdata',BOOK='growing-up-book.json',DRIVE='https://www.googleapis.com';
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{if(v==null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(e){}}
+let clientId=CLIENT_ID||lsGet('gub-client-id')||'';
+let token=null,bookId=null,queue=Promise.resolve(),photoUrls={},photoLoading={},gisP=null;
+const okFid=f=>typeof f==='string'&&/^[A-Za-z0-9_-]{10,200}$/.test(f);
+function boot(){
+  if(location.protocol==='file:'){status='file';render();return;}
+  status=clientId?'signin':'setup';render();
+  if(clientId)loadGis().catch(()=>{});
+}
+function loadGis(){
+  if(gisP)return gisP;
+  gisP=new Promise((res,rej)=>{
+    if(window.google&&google.accounts&&google.accounts.oauth2)return res();
+    const sc=document.createElement('script');sc.src='https://accounts.google.com/gsi/client';sc.async=true;
+    sc.onload=()=>res();sc.onerror=()=>{gisP=null;rej(new Error('gis'));};document.head.appendChild(sc);
+  });
+  return gisP;
+}
+function askToken(){
+  return new Promise((res,rej)=>{
+    const tc=google.accounts.oauth2.initTokenClient({client_id:clientId,scope:SCOPE,
+      callback:r=>{if(r&&r.access_token){token=r.access_token;res(token);}else rej(new Error((r&&r.error)||'denied'));},
+      error_callback:e=>rej(new Error((e&&e.type)||'popup'))});
+    tc.requestAccessToken({prompt:lsGet('gub-connected')?'':'consent'});
+  });
+}
+async function connect(){
+  signinMsg='';
+  try{
+    if(!(window.google&&google.accounts&&google.accounts.oauth2))await loadGis();
+    const p=askToken();status='connecting';render();
+    await p;lsSet('gub-connected','1');
+  }catch(e){status='signin';signinMsg='Google sign-in didn\'t finish. Check the Client ID is right, then tap the button again.';render();return;}
+  status='loading';render();
+  try{storeRecs=await readRemote();status='ready';}catch(e){if(e&&e.code==='auth')return;status='error';}
+  render();
+}
+function lock(){
+  token=null;storeRecs={};bookId=null;Object.values(photoUrls).forEach(u=>URL.revokeObjectURL(u));photoUrls={};
+  status='signin';signinMsg='Book locked. Everything is still safe in your Google Drive.';closeForm();render();
+}
+async function api(path,opts){
+  opts=opts||{};
+  if(!token)throw {code:'auth'};
+  const r=await fetch(DRIVE+path,Object.assign({},opts,{headers:Object.assign({Authorization:'Bearer '+token},opts.headers||{})}));
+  if(r.status===401){token=null;status='signin';signinMsg='Your Google session timed out. Tap the button to carry on where you left off.';closeForm();render();throw {code:'auth'};}
+  if(!r.ok)throw {code:'http',status:r.status};
+  return r;
+}
+function multipart(meta,blob){const fd=new FormData();fd.append('metadata',new Blob([JSON.stringify(meta)],{type:'application/json'}));fd.append('file',blob);return fd;}
+async function readRemote(){
+  const q=encodeURIComponent("name='"+BOOK+"' and trashed=false");
+  const j=await (await api('/drive/v3/files?spaces=appDataFolder&q='+q+'&orderBy=modifiedTime%20desc&fields=files(id)')).json();
+  const f=j.files&&j.files[0];
+  if(!f){bookId=null;return {};}
+  bookId=f.id;
+  const b=await (await api('/drive/v3/files/'+f.id+'?alt=media')).json();
+  return b&&b.records&&typeof b.records==='object'?b.records:{};
+}
+async function writeRemote(records){
+  const body=JSON.stringify({app:'growing-up-book',version:1,saved:new Date().toISOString(),records});
+  if(bookId){await api('/upload/drive/v3/files/'+bookId+'?uploadType=media',{method:'PATCH',headers:{'Content-Type':'application/json'},body});return;}
+  const r=await api('/upload/drive/v3/files?uploadType=multipart&fields=id',{method:'POST',body:multipart({name:BOOK,parents:['appDataFolder'],mimeType:'application/json'},new Blob([body],{type:'application/json'}))});
+  bookId=(await r.json()).id;
+}
+/* Every change re-reads the book first, so edits made on another device aren't lost. */
+function commit(ops){
+  const p=queue.then(async()=>{
+    const remote=await readRemote();
+    ops.forEach(o=>{if(o.del)delete remote[o.id];else remote[o.id]=o.data;});
+    await writeRemote(remote);storeRecs=remote;render();
+  });
+  queue=p.catch(()=>{});return p;
+}
+async function put(id,data){
+  if(sample){sampleRecs[id]=data;render();return true;}
+  if(status!=='ready'){toast('Open your book with Google Drive first.');return false;}
+  try{await commit([{id,data}]);return true;}
+  catch(e){if(!e||e.code!=='auth')toast('Couldn\'t save to Google Drive. Check your connection and try again.');return false;}
+}
+async function remove(id){
+  const r=cur()[id];
+  if(sample){if(r&&r.localUrl)URL.revokeObjectURL(r.localUrl);delete sampleRecs[id];render();return;}
+  try{await commit([{id,del:true}]);}catch(e){if(!e||e.code!=='auth')toast('Couldn\'t delete. Try again.');return;}
+  if(r&&r.kind==='photo'&&okFid(r.fileId))deletePhotoFile(r.fileId);
+}
+async function uploadPhoto(blob){
+  const r=await api('/upload/drive/v3/files?uploadType=multipart&fields=id',{method:'POST',body:multipart({name:'photo-'+newId('p')+'.jpg',parents:['appDataFolder'],mimeType:blob.type||'image/jpeg'},blob)});
+  return (await r.json()).id;
+}
+function deletePhotoFile(fid){if(okFid(fid))api('/drive/v3/files/'+fid,{method:'DELETE'}).catch(()=>{});}
+async function photoBlob(fid){return (await api('/drive/v3/files/'+fid+'?alt=media')).blob();}
+const PIXEL='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+const photoSrc=p=>p.localUrl||photoUrls[p.fileId]||PIXEL;
+function hydratePhotos(){
+  document.querySelectorAll('img[data-fid]').forEach(img=>{
+    const fid=img.dataset.fid;if(!okFid(fid))return;
+    if(photoUrls[fid]){if(img.src!==photoUrls[fid])img.src=photoUrls[fid];return;}
+    if(photoLoading[fid]||!token)return;
+    photoLoading[fid]=photoBlob(fid).then(b=>{photoUrls[fid]=URL.createObjectURL(b);
+      document.querySelectorAll('img[data-fid="'+fid+'"]').forEach(i=>{i.src=photoUrls[fid];});}).catch(()=>{}).finally(()=>{delete photoLoading[fid];});
+  });
+}
+const canPhotos=()=>sample||status==='ready';
+function isBirthdayish(dob,date){const y=Math.round(ageYears(dob,date));if(y<0)return false;return Math.abs(D(date)-D(addYears(dob,y)))<=10*864e5;}
+async function shrink(file){
+  const url=URL.createObjectURL(file);
+  try{
+    const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=url;});
+    const s=Math.min(1,2000/Math.max(img.naturalWidth,img.naturalHeight));
+    const cv=document.createElement('canvas');cv.width=Math.round(img.naturalWidth*s);cv.height=Math.round(img.naturalHeight*s);
+    cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    const b=await new Promise(r=>cv.toBlob(r,'image/jpeg',0.86));if(!b)throw new Error('encode');return b;
+  }finally{URL.revokeObjectURL(url);}
+}
+function blobToDataURL(b){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(b);});}
+function dataURLToBlob(u){const m=/^data:([^;,]+);base64,(.*)$/.exec(u||'');if(!m)return null;const bin=atob(m[2]);const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:m[1]});}
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,3200);}
+
+/* ---------- rendering ---------- */
+function render(){
+  const app=$('#app');chartSpecs={};
+  if(!sample&&status!=='ready'){app.innerHTML=gateView();drawCharts();return;}
+  const R=cur(),kids=children(R);
+  if(!sample&&kids.length===0){app.innerHTML=welcome();drawCharts();return;}
+  if(view.child!=='compare'&&!kids.find(k=>k.id===view.child))view.child=kids[0].id;
+  if(view.child==='compare'&&kids.length<1)view.child=kids[0].id;
+  let h=header(kids);
+  if(sample)h+=`<div class="banner"><p><b>Example family.</b> Maya and Theo are made up, and nothing you change here is saved.</p><button class="btn primary" data-act="sample-off">${status==='ready'?'Go to my own book':'Close example'}</button></div>`;
+  h+=view.child==='compare'?compareView(kids,R):childView(kids.find(k=>k.id===view.child),R);
+  app.innerHTML=h;drawCharts();hydratePhotos();remember();
+}
+
+function header(kids){
+  return `<header class="top"><div class="brand"><h1>Growing Up Book</h1><span class="hand">${sample?'the example family':'our family'}</span><span class="spacer"></span>${!sample&&status==='ready'?'<button class="btn" data-act="backup">Back up</button><button class="btn quiet" data-act="lock" title="Close your book on this device until you sign in again">Lock</button>':''}</div>
+  <nav class="kids" aria-label="Children">${kids.map(k=>`<button class="chip" style="--kid:var(--c${k.color||0});--kidp:var(--p${k.color||0})" data-act="child" data-id="${k.id}" aria-pressed="${view.child===k.id}"><span class="dot"></span>${esc(k.name)}</button>`).join('')}
+  ${kids.length>1?`<button class="chip cmp" data-act="compare" aria-pressed="${view.child==='compare'}"><span class="dot"></span>Side by side</button>`:''}
+  <button class="chip add" data-act="add" data-kind="child">+ Add a child</button></nav></header>`;
+}
+
+function welcome(){
+  const msg='';
+  return `<header class="top"><div class="brand"><h1>Growing Up Book</h1><span class="hand">our family</span></div></header>
+  <section class="welcome"><div><h2>A place for the pencil marks on the door frame.</h2>
+  <p>Give each child their own page for heights and weights, the milestones you want to remember, and letters for them to open when they're older. Put everyone side by side on one chart whenever you like.</p>
+  <ul><li>Growth in cm and kg, charted by age</li><li>A timeline of milestones and photos</li><li>Letters for them to read when they're older</li></ul>
+  ${msg}
+  <div class="acts">${status==='ready'?'<button class="btn primary" data-act="add" data-kind="child">Add your first child</button>':''}<button class="btn" data-act="sample-on">Look around an example family</button>${status==='ready'?'<button class="btn quiet" data-act="backup">Restore from a backup</button>':''}</div>
+  <p style="margin-top:14px;font-size:13px">Everything is saved in a private app folder in your Google Drive.</p></div>
+  <div class="mini-door chart" data-chart="welcomeDoor"></div></section>`;
+}
+function gateView(){
+  const head=`<header class="top"><div class="brand"><h1>Growing Up Book</h1><span class="hand">our family</span></div></header>`;
+  const ex='<button class="btn" data-act="sample-on">Look around an example family</button>';
+  if(status==='file')return head+`<section class="welcome"><div><h2>Put this file on the web first</h2><p>Google only lets an app use your Drive from a web address, not from a file opened straight from your device. Upload this file to a free host such as GitHub Pages, then open it from there.</p><div class="acts">${ex}</div></div></section>`;
+  if(status==='setup')return head+setupView();
+  if(status==='connecting'||status==='loading')return head+`<p class="muted">${status==='connecting'?'Waiting for Google sign-in…':'Opening your book from Google Drive…'}</p>`;
+  if(status==='error')return head+`<section class="welcome"><div><h2>Your book couldn't be opened</h2><p>Google Drive didn't respond. Check your connection, then try again.</p><div class="acts"><button class="btn primary" data-act="connect">Try again</button>${ex}</div></div></section>`;
+  return head+`<section class="welcome"><div><h2>Open your book</h2>
+  <p>Your book is kept in a private app folder in your Google Drive. Only this app can open it, and only while you're signed in to Google.</p>
+  ${signinMsg?`<p class="warn" style="margin-top:12px">${esc(signinMsg)}</p>`:''}
+  <div class="acts"><button class="btn primary" data-act="connect">Open with Google Drive</button>${ex}</div>
+  <p style="margin-top:10px"><button class="btn quiet" data-act="setup-edit" style="padding-inline:0">Change the Google setup</button></p></div>
+  <div class="mini-door chart" data-chart="welcomeDoor"></div></section>`;
+}
+function setupView(){
+  const o=esc(location.origin);
+  const ex='<button class="btn" data-act="sample-on">Look around an example family</button>';
+  return `<section class="card setup"><h2>Connect your Google Drive</h2>
+  <p class="muted">A one-off setup, about 15 minutes. It gives this app its own key to your Drive. The key belongs to you, and the app can only reach its own private folder.</p>
+  <ol class="steps">
+   <li>Go to <a href="https://console.cloud.google.com/projectcreate" target="_blank" rel="noopener">console.cloud.google.com</a>, sign in with the Google account whose Drive you want to use, and create a project called <b>Growing Up Book</b>.</li>
+   <li>In the search bar at the top, search for <b>Google Drive API</b>, open it and click <b>Enable</b>.</li>
+   <li>Search for <b>Google Auth Platform</b> and click <b>Get started</b>. Give the app a name, choose your email address, pick <b>External</b> for the audience, then finish.</li>
+   <li>In Google Auth Platform, open <b>Audience</b>. Under <b>Test users</b>, add your own Google email address. Leave the app in <b>Testing</b>.</li>
+   <li>Open <b>Clients</b>, then <b>Create client</b>, and choose <b>Web application</b>. Under <b>Authorised JavaScript origins</b>, add this exact address:<br><code>${o}</code> <button type="button" class="btn quiet" data-act="copy-origin">Copy</button></li>
+   <li>Click <b>Create</b>. Copy the <b>Client ID</b>, which ends in <code>.apps.googleusercontent.com</code>, and paste it below.</li>
+  </ol>
+  <div class="field"><label for="f-client">Client ID</label><input id="f-client" autocomplete="off" spellcheck="false" placeholder="123456789-abc.apps.googleusercontent.com" value="${esc(clientId)}"></div>
+  <p class="err" id="setup-err" hidden></p>
+  <div class="acts" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" data-act="setup-save">Save and continue</button>${ex}</div>
+  <p class="muted" style="font-size:13px">The first time you sign in, Google warns that it hasn't verified the app. That's expected, because the app is yours. Choose <b>Continue</b>.</p></section>`;
+}
+function welcomeDoorSpec(){chartSpecs.welcomeDoor={type:'door',h:300,top:140,people:[{name:'Age 3',color:0,marks:[],latest:95},{name:'Age 5',color:1,marks:[],latest:109},{name:'Age 7',color:2,marks:[],latest:121}]};}
+
+function lastWith(ms,f){for(let i=ms.length-1;i>=0;i--)if(typeof ms[i][f]==='number')return {m:ms[i],i};return null;}
+function prevWith(ms,f,before){for(let i=before-1;i>=0;i--)if(typeof ms[i][f]==='number')return ms[i];return null;}
+
+function childView(c,R){
+  const kid=`--kid:var(--c${c.color||0});--kidp:var(--p${c.color||0});--kidq:var(--q${c.color||0})`,t=todayStr();
+  const ms=recs(R,c.id,'measure'),mi=recs(R,c.id,'milestone',true),le=recs(R,c.id,'letter',true),ph=recs(R,c.id,'photo',true);
+  const lh=lastWith(ms,'heightCm'),lw=lastWith(ms,'weightKg');
+  const pvh=lh&&prevWith(ms,'heightCm',lh.i),pw=lw&&prevWith(ms,'weightKg',lw.i);
+  const stat=(lbl,val,unit,delta)=>`<div><dt>${lbl}</dt><dd>${val}${unit?` <small>${unit}</small>`:''}</dd>${delta?`<p class="delta">${delta}</p>`:''}</div>`;
+  let h=`<section class="hero" style="${kid}"><div class="hero-head"><div><h1>${esc(c.name)}</h1>
+  <p class="sub">${ageText(c.dob,t)} old · born ${fmtDate(c.dob)}</p></div>
+  <button class="btn quiet" data-act="edit" data-id="${c.id}">Edit details</button></div>
+  <dl class="stats">
+   ${stat('Height',lh?fmt1(lh.m.heightCm):'—',lh?'cm':'',lh?(pvh?`${lh.m.heightCm-pvh.heightCm>=0?'+':''}${fmt1(lh.m.heightCm-pvh.heightCm)} cm since ${fmtMonth(pvh.date)}`:`measured ${fmtMonth(lh.m.date)}`):'not measured yet')}
+   ${stat('Weight',lw?fmtKg(lw.m.weightKg):'—',lw?'kg':'',lw?(pw?`${lw.m.weightKg-pw.weightKg>=0?'+':''}${fmtKg(lw.m.weightKg-pw.weightKg)} kg since ${fmtMonth(pw.date)}`:`weighed ${fmtMonth(lw.m.date)}`):'not weighed yet')}
+   ${stat('Memories',mi.length+ph.length,'',(mi.length||ph.length)?pl(mi.length,'milestone')+', '+pl(ph.length,'photo'):'none yet')}
+   ${stat('Letters',le.length,'',le[0]?'latest: '+esc(le[0].title||fmtDate(le[0].written)):'none yet')}
+  </dl></section>
+  <div class="tabs" role="tablist">${[['growth','Growth',ms.length],['timeline','Timeline',mi.length+ph.length],['letters','Letters',le.length]].map(([k,l,n])=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${view.tab===k}">${l}<span class="n">${n}</span></button>`).join('')}</div>`;
+  if(view.tab==='timeline')h+=timelineView(c,mi,ph,kid);
+  else if(view.tab==='letters')h+=lettersView(c,le,kid);
+  else h+=growthView(c,ms,kid);
+  return h;
+}
+
+function growthView(c,ms,kid){
+  let h=`<section class="sec"><div class="sec-head"><h2>Growth</h2><button class="btn primary" data-act="add" data-kind="measure">Add a measurement</button></div>`;
+  if(!ms.length)return h+`<div class="empty"><span class="hand">No pencil marks yet.</span><span>Add ${esc(c.name)}'s height or weight. Red book entries from health visitor checks are a good place to start.</span></div></section>`;
+  const ser=f=>[{color:c.color||0,name:c.name,points:ms.filter(m=>typeof m[f]==='number').map(m=>({x:ageYears(c.dob,m.date),y:m[f],t:`${fmtDate(m.date)} · ${ageText(c.dob,m.date)} · ${f==='heightCm'?fmt1(m[f])+' cm':fmtKg(m[f])+' kg'}`}))}];
+  chartSpecs.h={series:ser('heightCm'),unit:'cm',label:'heights'};
+  chartSpecs.w={series:ser('weightKg'),unit:'kg',label:'weights'};
+  h+=`<div class="charts2"><figure class="card"><figcaption>Height <span>cm by age</span></figcaption><div class="chart" data-chart="h"></div></figure>
+  <figure class="card"><figcaption>Weight <span>kg by age</span></figcaption><div class="chart" data-chart="w"></div></figure></div>
+  <div class="card tbl-wrap"><table><thead><tr><th>Date</th><th>Age</th><th class="r">Height</th><th class="r">Weight</th><th>Note</th><th></th></tr></thead><tbody>
+  ${ms.slice().reverse().map(m=>`<tr><td>${fmtDate(m.date)}</td><td>${ageText(c.dob,m.date)}</td><td class="r">${typeof m.heightCm==='number'?fmt1(m.heightCm)+' cm':'—'}</td><td class="r">${typeof m.weightKg==='number'?fmtKg(m.weightKg)+' kg':'—'}</td><td class="note">${esc(m.note)}</td><td class="r"><button class="rowbtn" data-act="edit" data-id="${m.id}">Edit</button></td></tr>`).join('')}
+  </tbody></table></div></section>`;
+  return h;
+}
+
+function birthdayStrip(c,ph){
+  const t=todayStr(),years=Math.max(0,Math.floor(monthsBetween(c.dob,t)/12));
+  let h='';
+  for(let y=years;y>=0;y--){
+    const bd=addYears(c.dob,y);
+    const cands=ph.filter(p=>p.birthday&&Math.floor(monthsBetween(c.dob,p.date)/12)===y).sort((a,b)=>Math.abs(D(a.date)-D(bd))-Math.abs(D(b.date)-D(bd)));
+    const lab=y===0?'The day you were born':ordinal(y)+' birthday';
+    if(cands[0])h+=`<button class="slot" data-act="photo" data-id="${cands[0].id}" aria-label="${esc(lab)} photo"><img src="${esc(photoSrc(cands[0]))}" data-fid="${esc(cands[0].fileId||'')}" alt="${esc(c.name+', '+lab)}" loading="lazy"><span class="lab">${y===0?'Born':esc(lab)}</span></button>`;
+    else if(canPhotos())h+=`<button class="slot empty-slot" data-act="add-photo" data-date="${bd}" data-bday="1"><span class="lab">${y===0?'Born':esc(lab)}</span><span>${fmtDate(bd)}</span><span>+ Add photo</span></button>`;
+    else h+=`<div class="slot empty-slot"><span class="lab">${y===0?'Born':esc(lab)}</span><span>${fmtDate(bd)}</span></div>`;
+  }
+  return `<div class="bdays">${h}</div>`;
+}
+function openBirthdays(cid){
+  const R=cur(),c=R[cid];if(!c)return;editing=null;
+  const ph=recs(R,cid,'photo',true);
+  $('#frm').innerHTML=`<h2>${esc(c.name)}'s birthdays</h2><p class="muted">One photo for each birthday. Tap an empty frame to add one.</p>${birthdayStrip(Object.assign({id:cid},c),ph)}
+   <div class="dlg-acts"><div></div><div><button type="button" class="btn quiet" data-act="close">Close</button></div></div>`;
+  showDlg();
+}
+const CAT_TINT={Firsts:'t-yel',Words:'t-rose',Movement:'t-blue',Teeth:'t-pis',Health:'t-pis',School:'t-apr',Hobbies:'t-blue','Funny moments':'t-yel'};
+function timelineView(c,mi,ph,kid){
+  let h=`<section class="sec" style="${kid}"><div class="sec-head"><h2>Timeline</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn quiet" data-act="bdays" data-id="${c.id}">Every birthday (${new Set(ph.filter(p=>p.birthday).map(p=>Math.floor(monthsBetween(c.dob,p.date)/12))).size} of ${Math.floor(monthsBetween(c.dob,todayStr())/12)+1})</button>${canPhotos()?'<button class="btn" data-act="add-photo">Add a photo</button>':''}<button class="btn primary" data-act="add" data-kind="milestone">Add a milestone</button></div></div>`;
+  const items=[...mi,...ph].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  if(!items.length)return h+`<div class="empty"><span class="hand">Nothing here yet.</span><span>First smile, first word, first day at school: add the moments and photos you want to keep.</span></div></section>`;
+  const groups=new Map();
+  items.forEach(m=>{const y=Math.max(0,Math.floor(monthsBetween(c.dob,m.date)/12));if(!groups.has(y))groups.set(y,[]);groups.get(y).push(m);});
+  h+='<div class="ages">';
+  [...groups.entries()].sort((a,b)=>b[0]-a[0]).forEach(([y,list])=>{
+    const from=addYears(c.dob,y);
+    h+=`<div class="age-group"><h3>${y===0?'First year':'Age '+y}<span>${fmtMonth(from)} – ${fmtMonth(addMonths(addYears(c.dob,y+1),-1))}</span></h3><ul class="mlist">
+    ${list.map(m=>m.kind==='photo'
+      ?`<li class="ph-item"><button class="ph-btn" data-act="photo" data-id="${m.id}"><img src="${esc(photoSrc(m))}" data-fid="${esc(m.fileId||'')}" alt="${esc(m.caption||'Photo of '+c.name)}" loading="lazy"></button>
+        <div class="t">${esc(m.caption||'Photo')}${m.birthday?'<span class="pill">Birthday</span>':''}</div><button class="rowbtn" data-act="edit" data-id="${m.id}">Edit</button>
+        <div class="d">${fmtDate(m.date)} · ${ageText(c.dob,m.date)}</div></li>`
+      :`<li class="${CAT_TINT[m.category]||''}"><div class="t">${esc(m.title)}${m.category?`<span class="pill">${esc(m.category)}</span>`:''}</div><button class="rowbtn" data-act="edit" data-id="${m.id}">Edit</button>
+    <div class="d">${fmtDate(m.date)} · ${ageText(c.dob,m.date)}</div>${m.note?`<div class="nt">${esc(m.note)}</div>`:''}</li>`).join('')}</ul></div>`;
+  });
+  return h+'</div></section>';
+}
+
+function lettersView(c,le,kid){
+  let h=`<section class="sec" style="${kid}"><div class="sec-head"><h2>Letters to ${esc(c.name)}</h2><button class="btn primary" data-act="add" data-kind="letter">Write a letter</button></div>`;
+  if(!le.length)return h+`<div class="empty"><span class="hand">Dear ${esc(c.name)}…</span><span>Write something now for ${esc(c.name)} to read when they're older.</span></div></section>`;
+  h+='<div class="letters">';
+  le.forEach(l=>{
+    const open=openLetters.has(l.id),long=(l.body||'').length>220||(l.body||'').split('\n').length>5;
+    h+=`<article class="letter"><h3>${esc(l.title||'A letter')}</h3>
+    <p class="meta">Written ${fmtDate(l.written)}, when ${esc(c.name)} was ${ageText(c.dob,l.written)} old</p>
+    <div class="body${long&&!open?' clip':''}">${esc(l.body)}</div>
+    <footer>${long?`<button class="btn quiet" data-act="letter" data-id="${l.id}">${open?'Fold it up':'Read the whole letter'}</button>`:''}<button class="btn quiet" data-act="edit" data-id="${l.id}">Edit</button></footer></article>`;
+  });
+  return h+'</div></section>';
+}
+
+function compareView(kids,R){
+  const f=view.metric==='weight'?'weightKg':'heightCm',unit=view.metric==='weight'?'kg':'cm',fm=view.metric==='weight'?fmtKg:fmt1;
+  const all=kids.map(k=>({k,ms:recs(R,k.id,'measure').filter(m=>typeof m[f]==='number')}));
+  chartSpecs.cmp={series:all.map(({k,ms})=>({color:k.color||0,name:k.name,points:ms.map(m=>({x:ageYears(k.dob,m.date),y:m[f],t:`${k.name} · ${ageText(k.dob,m.date)} · ${fm(m[f])} ${unit}`}))})),unit,label:view.metric==='weight'?'weights':'heights',h:320};
+  const hAll=kids.map(k=>({k,ms:recs(R,k.id,'measure').filter(m=>typeof m.heightCm==='number')}));
+  chartSpecs.door={type:'door',h:400,people:hAll.filter(x=>x.ms.length).map(({k,ms})=>({name:k.name,color:k.color||0,marks:ms.map(m=>m.heightCm),latest:ms[ms.length-1].heightCm}))};
+  // same-age table
+  let maxAge=0;all.forEach(({k,ms})=>ms.forEach(m=>maxAge=Math.max(maxAge,ageYears(k.dob,m.date))));
+  const rows=[];
+  for(let a=0;a<=Math.floor(maxAge+0.25);a++){
+    const cells=all.map(({k,ms})=>{let best=null,bd=0.26;ms.forEach(m=>{const d=Math.abs(ageYears(k.dob,m.date)-a);if(d<bd){bd=d;best=m;}});return best?fm(best[f]):null;});
+    if(cells.some(x=>x!==null))rows.push({a,cells});
+  }
+  return `<section class="sec"><div class="sec-head"><h2>Side by side</h2>
+  <div class="seg" role="group" aria-label="Measurement"><button data-act="metric" data-m="height" aria-pressed="${view.metric!=='weight'}">Height</button><button data-act="metric" data-m="weight" aria-pressed="${view.metric==='weight'}">Weight</button></div></div>
+  <figure class="card"><figcaption>${view.metric==='weight'?'Weight':'Height'} by age <span>each child at the same age, not the same date</span></figcaption>
+  <div class="legend">${kids.map(k=>`<span style="--kid:var(--c${k.color||0})"><i></i>${esc(k.name)}</span>`).join('')}</div>
+  <div class="chart" data-chart="cmp"></div></figure>
+  <div class="cmp-grid">
+   <figure class="card"><figcaption>At the same age <span>nearest reading within 3 months</span></figcaption>
+   ${rows.length?`<div class="tbl-wrap"><table><thead><tr><th>Age</th>${kids.map(k=>`<th class="r"><span class="dot-s" style="--kid:var(--c${k.color||0})"></span>${esc(k.name)}</th>`).join('')}</tr></thead><tbody>
+   ${rows.map(r=>`<tr><td>${r.a===0?'Birth':pl(r.a,'year')}</td>${r.cells.map(x=>`<td class="r">${x===null?'<span class="muted">—</span>':x+' '+unit}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'<p class="muted">Add measurements to compare them here.</p>'}
+   </figure>
+   <figure class="card"><figcaption>The door frame <span>latest heights, older marks faint</span></figcaption><div class="chart" data-chart="door"></div></figure>
+  </div></section>`;
+}
+
+/* ---------- charts ---------- */
+function nice(r){const p=Math.pow(10,Math.floor(Math.log10(r)));const f=r/p;return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*p;}
+function xLabel(x){if(x===0)return '0';if(x<1)return Math.round(x*12)+'m';return (Number.isInteger(x)?x:x.toFixed(1))+'y';}
+function lineChart(s,W){
+  const H=s.h||240,m={l:42,r:14,t:12,b:32};
+  const pts=s.series.flatMap(x=>x.points);
+  if(!pts.length)return `<p class="muted chart-empty">No ${s.label} recorded yet.</p>`;
+  const xmax=Math.max(0.5,...pts.map(p=>p.x));
+  const xs=xmax<=1.5?0.25:xmax<=4?0.5:xmax<=10?1:2;
+  const X1=Math.ceil(xmax/xs-1e-9)*xs||xs;
+  let ymin=Math.min(...pts.map(p=>p.y)),ymax=Math.max(...pts.map(p=>p.y));
+  if(ymax-ymin<1){ymin-=1;ymax+=1;}
+  const ys=nice((ymax-ymin)/4),Y0=Math.max(0,Math.floor(ymin/ys)*ys),Y1=Math.ceil(ymax/ys)*ys;
+  const sx=x=>m.l+x/X1*(W-m.l-m.r),sy=y=>H-m.b-(y-Y0)/(Y1-Y0)*(H-m.t-m.b);
+  let g='';
+  for(let y=Y0;y<=Y1+1e-9;y+=ys){const Y=sy(y).toFixed(1);g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y}" y2="${Y}" style="stroke:var(--line)" stroke-width="1"/><text x="${m.l-8}" y="${Y}" dy="4" text-anchor="end" font-size="11.5" style="fill:var(--muted)">${+y.toFixed(2)}</text>`;}
+  const every=Math.max(1,Math.ceil((X1/xs)/Math.max(2,Math.floor((W-m.l-m.r)/52))));
+  for(let i=0,x=0;x<=X1+1e-9;i++,x+=xs){if(i%every)continue;const X=sx(x).toFixed(1);g+=`<line x1="${X}" x2="${X}" y1="${H-m.b}" y2="${H-m.b+4}" style="stroke:var(--muted)"/><text x="${X}" y="${H-m.b+18}" text-anchor="middle" font-size="11.5" style="fill:var(--muted)">${xLabel(+x.toFixed(2))}</text>`;}
+  g+=`<text x="${m.l-8}" y="${m.t-2}" text-anchor="end" font-size="10.5" style="fill:var(--muted)">${s.unit}</text>`;
+  let marks='';
+  s.series.forEach(se=>{
+    const p=se.points.slice().sort((a,b)=>a.x-b.x);if(!p.length)return;
+    const c=`var(--c${se.color})`;
+    const d=p.map((q,i)=>(i?'L':'M')+sx(q.x).toFixed(1)+' '+sy(q.y).toFixed(1)).join(' ');
+    if(s.series.length===1&&p.length>1)marks+=`<path d="${d} L${sx(p[p.length-1].x).toFixed(1)} ${H-m.b} L${sx(p[0].x).toFixed(1)} ${H-m.b} Z" style="fill:${c};opacity:.1"/>`;
+    marks+=`<path d="${d}" style="fill:none;stroke:${c}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+    p.forEach((q,i)=>{const last=i===p.length-1;marks+=`<circle cx="${sx(q.x).toFixed(1)}" cy="${sy(q.y).toFixed(1)}" r="${last?5.5:3.5}" style="fill:${last?c:'var(--surface)'};stroke:${c}" stroke-width="2"><title>${esc(q.t)}</title></circle>`;});
+  });
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(s.label)} by age">${g}${marks}</svg>`;
+}
+function doorChart(s,W){
+  const H=s.h||400,b=24,t=14,fx=46,fw=Math.min(62,W*0.2);
+  if(!s.people.length)return '<p class="muted chart-empty">Add heights to see the pencil marks.</p>';
+  const maxH=Math.max(...s.people.map(p=>p.latest));
+  const top=s.top||Math.max(100,Math.ceil((maxH+15)/20)*20);
+  const sy=v=>H-b-v/top*(H-b-t);
+  let g=`<rect x="${fx}" y="${t-6}" width="${fw}" height="${H-b-t+6}" style="fill:var(--wood);stroke:var(--wood-edge)" stroke-width="1.5"/>`;
+  g+=`<rect x="${fx+fw}" y="${t-6}" width="10" height="${H-b-t+6}" style="fill:var(--wood-edge);opacity:.6"/>`;
+  g+=`<line x1="0" x2="${W}" y1="${H-b}" y2="${H-b}" style="stroke:var(--muted)" stroke-width="1.5"/>`;
+  for(let v=0;v<=top;v+=10){const Y=sy(v).toFixed(1),major=v%50===0;
+    g+=`<line x1="${fx}" x2="${fx+(major?12:7)}" y1="${Y}" y2="${Y}" style="stroke:var(--wood-ink)" stroke-width="1"/>`;
+    if(major||top<=140&&v%20===0)g+=`<text x="${fx-6}" y="${Y}" dy="4" text-anchor="end" font-size="11" style="fill:var(--muted)">${v}</text>`;}
+  g+=`<text x="${fx-6}" y="${t+2}" text-anchor="end" font-size="10.5" style="fill:var(--muted)">cm</text>`;
+  s.people.forEach(p=>p.marks.slice(0,-1).forEach(v=>{const Y=sy(v).toFixed(1);g+=`<line x1="${fx+fw*0.2}" x2="${fx+fw-4}" y1="${Y}" y2="${Y}" style="stroke:var(--c${p.color});opacity:.35" stroke-width="1.5"/>`;}));
+  const lab=s.people.map(p=>({p,y:sy(p.latest)})).sort((a,b)=>a.y-b.y);
+  lab.forEach((o,i)=>{o.ly=(i&&o.y-lab[i-1].ly<24)?lab[i-1].ly+24:o.y;});
+  lab.forEach(o=>{const c=`var(--c${o.p.color})`,Y=o.y.toFixed(1),LY=o.ly.toFixed(1),lx=fx+fw+18;
+    g+=`<path d="M${fx+3} ${Y} L${fx+fw+4} ${Y} L${lx-4} ${LY}" style="fill:none;stroke:${c}" stroke-width="2.4" stroke-linecap="round"/>`;
+    g+=`<text x="${lx}" y="${LY}" dy="6" font-size="22" style="fill:${c};font-family:var(--f-hand);font-weight:700">${esc(o.p.name)} <tspan font-size="18" style="fill:var(--muted);font-weight:500">${o.p.name.startsWith('Age')?'':fmt1(o.p.latest)+' cm'}</tspan></text>`;});
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Heights marked on a door frame">${g}</svg>`;
+}
+function drawCharts(){
+  if($('[data-chart="welcomeDoor"]'))welcomeDoorSpec();
+  document.querySelectorAll('[data-chart]').forEach(el=>{const s=chartSpecs[el.dataset.chart];if(!s)return;const w=Math.max(240,Math.floor(el.clientWidth));el.innerHTML=s.type==='door'?doorChart(s,w):lineChart(s,w);});
+}
+let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(drawCharts,120);});
+
+/* ---------- forms ---------- */
+const CATS=['Firsts','Words','Movement','Teeth','Health','School','Hobbies','Funny moments','Other'];
+function field(id,label,input,hint){return `<div class="field"><label for="${id}">${label}</label>${input}${hint?`<span class="hint">${hint}</span>`:''}</div>`;}
+function openForm(kind,id,preset){
+  const R=cur(),d=id?R[id]:{},t=todayStr();deleteArmed=false;
+  const child=kind==='child'?null:R[id?d.childId:view.child];
+  editing={kind,id,childId:kind==='child'?null:(id?d.childId:view.child)};
+  let h='',title='';
+  if(kind==='child'){
+    title=id?'Edit '+esc(d.name):'Add a child';
+    const used=children(R).map(k=>k.color);const col=id?d.color:([0,1,2,3,4].find(c=>!used.includes(c))??0);
+    h=field('f-name','Name',`<input id="f-name" required maxlength="60" value="${esc(d.name)}" autocomplete="off">`)+
+      field('f-dob','Date of birth',`<input id="f-dob" type="date" required max="${t}" value="${esc(d.dob)}">`)+
+      `<div class="field"><span class="lbl">Colour on charts</span><div class="swatches">${[0,1,2,3,4].map(c=>`<label style="--kid:var(--c${c})" aria-label="Colour ${c+1}"><input type="radio" name="f-color" id="f-color-${c}" value="${c}" ${c===col?'checked':''}><span></span></label>`).join('')}</div></div>`;
+    if(id){const n=Object.values(R).filter(v=>v.childId===id).length;h+=`<p class="warn" id="del-warn" hidden>Deleting ${esc(d.name)} also deletes their ${pl(n,'entry')}: measurements, milestones, photos and letters.</p>`;}
+  }else if(kind==='measure'){
+    title=(id?'Edit measurement':'Add a measurement')+' for '+esc(child.name);
+    h=field('f-date','Date measured',`<input id="f-date" type="date" required min="${child.dob}" max="${t}" value="${esc(d.date||t)}">`)+
+      `<div class="row2">${field('f-h','Height (cm)',`<input id="f-h" type="number" inputmode="decimal" step="0.1" min="20" max="250" value="${d.heightCm??''}">`)}${field('f-w','Weight (kg)',`<input id="f-w" type="number" inputmode="decimal" step="0.01" min="0.5" max="200" value="${d.weightKg??''}">`)}</div>`+
+      `<span class="hint muted" style="font-size:12.5px;margin-top:-8px">Fill in one or both. 1 lb = 0.454 kg, 1 inch = 2.54 cm.</span>`+
+      field('f-note','Note (optional)',`<input id="f-note" maxlength="140" value="${esc(d.note)}" placeholder="e.g. 2-year review">`);
+  }else if(kind==='milestone'){
+    title=(id?'Edit milestone':'Add a milestone')+' for '+esc(child.name);
+    h=field('f-title','What happened',`<input id="f-title" required maxlength="120" value="${esc(d.title)}" placeholder="e.g. First steps">`)+
+      `<div class="row2">${field('f-date','Date',`<input id="f-date" type="date" required min="${child.dob}" max="${t}" value="${esc(d.date||t)}">`)}${field('f-cat','Type',`<select id="f-cat">${CATS.map(c=>`<option ${c===(d.category||'Firsts')?'selected':''}>${c}</option>`).join('')}</select>`)}</div>`+
+      field('f-note','The story (optional)',`<textarea id="f-note" maxlength="2000">${esc(d.note)}</textarea>`);
+  }else if(kind==='photo'){
+    title=(id?'Edit photo':'Add a photo')+' of '+esc(child.name);
+    const pre=preset||{};const date=d.date||pre.date||t;const bday=id?!!d.birthday:!!pre.bday;
+    h=`<div class="field"><span class="lbl">Photo</span><img id="f-prev" class="preview" alt="" ${id?`src="${esc(photoSrc(d))}" data-fid="${esc(d.fileId||'')}"`:'hidden'}>
+      <span class="btn file-btn" style="align-self:flex-start">${id?'Choose a different photo':'Choose a photo'}<input id="f-file" type="file" accept="image/*" aria-label="Choose a photo"></span>
+      <span class="hint">From your phone's photo library or your files. Large photos are resized to save space.</span></div>`+
+      field('f-date','Date taken',`<input id="f-date" type="date" required min="${child.dob}" max="${t}" value="${esc(date)}">`)+
+      field('f-cap','Caption (optional)',`<input id="f-cap" maxlength="160" value="${esc(d.caption)}" placeholder="e.g. Volcano cake, 7th birthday">`)+
+      `<label class="check"><input type="checkbox" id="f-bday" ${bday?'checked':''}> Birthday photo (shows in "Every birthday")</label>`;
+  }else{
+    title=(id?'Edit letter':'Write a letter')+' to '+esc(child.name);
+    h=field('f-title','Title',`<input id="f-title" maxlength="120" value="${esc(d.title)}" placeholder="e.g. On your first day of school">`)+
+      field('f-body','Your letter',`<textarea id="f-body" class="hand" required maxlength="20000">${esc(d.body||'Dear '+child.name+',\n\n')}</textarea>`)+
+      field('f-written','Written on',`<input id="f-written" type="date" required max="${t}" value="${esc(d.written||t)}">`);
+  }
+  $('#frm').innerHTML=`<h2>${title}</h2>${h}<p class="err" id="f-err" hidden></p>
+   <div class="dlg-acts"><div>${id?'<button type="button" class="btn danger" id="del-btn" data-act="delete">Delete</button>':''}</div>
+   <div><button type="button" class="btn quiet" data-act="close">Cancel</button><button type="submit" class="btn primary">${id?'Save changes':kind==='letter'?'Save letter':'Add'}</button></div></div>`;
+  showDlg();
+  const first=$('#frm input,#frm textarea');if(first&&kind!=='letter')first.focus();
+  const fi=$('#f-file');
+  if(fi)fi.addEventListener('change',async()=>{
+    const f=fi.files&&fi.files[0];if(!f||!editing)return;
+    $('#f-err').hidden=true;
+    try{
+      const b=await shrink(f);if(!editing)return;editing.blob=b;
+      const p=$('#f-prev');if(p.dataset.url)URL.revokeObjectURL(p.dataset.url);p.dataset.url=URL.createObjectURL(b);p.src=p.dataset.url;p.hidden=false;
+      if(!id&&!preset&&f.lastModified){const ld=new Date(f.lastModified);const ds=ld.getFullYear()+'-'+pad(ld.getMonth()+1)+'-'+pad(ld.getDate());
+        if(D(ds)>=D(child.dob)&&D(ds)<=D(t)){$('#f-date').value=ds;if(isBirthdayish(child.dob,ds))$('#f-bday').checked=true;}}
+    }catch(e){editing.blob=null;fail('That photo couldn\'t be read. Try a JPEG or PNG.');}
+  });
+}
+function showDlg(){setTimeout(hydratePhotos,0);const dlg=$('#dlg');if(dlg.open)return;if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');}
+
+function openPhoto(id){
+  const R=cur(),p=R[id];if(!p)return;const c=R[p.childId];editing=null;
+  $('#frm').innerHTML=`<div class="lightbox"><img src="${esc(photoSrc(p))}" data-fid="${esc(p.fileId||'')}" alt="${esc(p.caption||'Photo')}"></div>
+   <h2>${esc(p.caption||(c?c.name:'Photo'))}</h2><p class="muted">${fmtDate(p.date)}${c?' · '+esc(c.name)+' was '+ageText(c.dob,p.date)+' old':''}${p.birthday?' · birthday photo':''}</p>
+   <div class="dlg-acts"><div></div><div><button type="button" class="btn quiet" data-act="close">Close</button><button type="button" class="btn primary" data-act="edit" data-id="${id}">Edit</button></div></div>`;
+  showDlg();
+}
+
+let pendingRestore=null;
+function openBackup(){
+  editing=null;pendingRestore=null;let last=null;try{last=localStorage.getItem('gub-last-backup');}catch(e){}
+  const n=Object.keys(storeRecs).length,np=Object.values(storeRecs).filter(r=>r.kind==='photo').length;
+  $('#frm').innerHTML=`<h2>Back up your book</h2>
+   <p>Save everything in your book (${pl(n,'entry')}, including ${pl(np,'photo')}) as one file. Keep it somewhere safe, such as Google Drive, and restore it here if you ever need to.</p>
+   <p class="status-line">Last backup from this device: ${last?fmtDate(last):'none yet'}</p>
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn primary" data-act="do-backup" ${n?'':'disabled'}>Download backup</button>
+   <span class="btn file-btn">Restore from a file<input type="file" id="f-restore" accept=".json,application/json" aria-label="Restore from a backup file"></span></div>
+   <p class="status-line" id="bk-status" aria-live="polite"></p><div id="bk-confirm" style="display:flex;flex-direction:column;gap:10px;align-items:flex-start"></div>
+   <div class="dlg-acts"><div></div><div><button type="button" class="btn quiet" data-act="close">Close</button></div></div>`;
+  showDlg();
+  $('#f-restore').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(f)readRestore(f);});
+}
+async function doBackup(btn){
+  const st=$('#bk-status');btn.disabled=true;
+  const list=Object.values(storeRecs).filter(r=>r.kind==='photo'&&okFid(r.fileId)),photos={};let i=0;
+  for(const p of list){i++;st.textContent=`Gathering photos (${i} of ${list.length})…`;
+    try{photos[p.fileId]=await blobToDataURL(photoUrls[p.fileId]?await (await fetch(photoUrls[p.fileId])).blob():await photoBlob(p.fileId));}catch(e){}}
+  const missing=list.length-Object.keys(photos).length;
+  const out=JSON.stringify({app:'growing-up-book',version:1,exported:new Date().toISOString(),records:storeRecs,photos});
+  st.textContent='Ready to save.';
+  try{
+    const u=URL.createObjectURL(new Blob([out],{type:'application/json'}));const a=document.createElement('a');a.href=u;a.download='growing-up-book-backup-'+todayStr()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000);
+    try{localStorage.setItem('gub-last-backup',todayStr());}catch(e){}
+    st.textContent='Backup saved.'+(missing?` ${pl(missing,'photo')} couldn't be included.`:'');
+  }catch(e){st.textContent='The backup couldn\'t be saved. Try again.';}
+  btn.disabled=false;
+}
+async function readRestore(file){
+  const st=$('#bk-status'),cf=$('#bk-confirm');cf.innerHTML='';pendingRestore=null;
+  let j;try{j=JSON.parse(await file.text());}catch(e){j=null;}
+  if(!j||j.app!=='growing-up-book'||!j.records||typeof j.records!=='object'){st.textContent='That file isn\'t a Growing Up Book backup.';return;}
+  const KINDS=['child','measure','milestone','letter','photo'],clean={};
+  for(const [id,r] of Object.entries(j.records)){
+    if(!/^[A-Za-z0-9_\-.~:@+]{1,120}$/.test(id)||!r||typeof r!=='object'||!KINDS.includes(r.kind))continue;
+    const o={};for(const [k,v] of Object.entries(r)){if(k==='localUrl'||!/^[A-Za-z]{1,40}$/.test(k))continue;
+      if(typeof v==='string')o[k]=v.slice(0,20000);else if((typeof v==='number'&&isFinite(v))||typeof v==='boolean'||v===null)o[k]=v;}
+    clean[id]=o;
+  }
+  const n=Object.keys(clean).length,nk=Object.values(clean).filter(r=>r.kind==='child').length;
+  if(!n){st.textContent='That backup is empty.';return;}
+  pendingRestore={records:clean,photos:j.photos&&typeof j.photos==='object'?j.photos:{}};
+  const when=typeof j.exported==='string'&&/^\d{4}-\d\d-\d\d/.test(j.exported)?' from '+fmtDate(j.exported.slice(0,10)):'';
+  st.textContent=`This backup${when} has ${pl(nk,'child')} and ${pl(n,'entry')} in total.`;
+  cf.innerHTML=`<p class="status-line">Restoring adds these to your book. An entry that's already here is replaced by the version in the backup.</p><button type="button" class="btn primary" data-act="do-restore">Restore ${pl(n,'entry')}</button>`;
+}
+async function doRestore(btn){
+  if(!pendingRestore||status!=='ready')return;btn.disabled=true;
+  const st=$('#bk-status'),{records,photos}=pendingRestore,ids=Object.keys(records),ops=[];let lost=0,i=0;
+  for(const id of ids){
+    const r=Object.assign({},records[id]);i++;
+    if(r.kind==='photo'){
+      const key=r.fileId||r.assetId,ex=storeRecs[id];delete r.assetId;
+      if(!(ex&&ex.fileId&&ex.fileId===r.fileId)){
+        const du=photos[key],b=typeof du==='string'&&/^data:image\/(jpeg|png|webp|gif);base64,/.test(du)?dataURLToBlob(du):null;
+        if(!b){lost++;continue;}
+        st.textContent=`Uploading photos to Google Drive… ${i} of ${ids.length}`;
+        try{r.fileId=await uploadPhoto(b);}catch(e){lost++;continue;}
+      }
+    }
+    ops.push({id,data:r});
+  }
+  st.textContent='Saving to Google Drive…';
+  try{await commit(ops);}catch(e){st.textContent='The restore didn\'t finish. Check your connection and try again.';btn.disabled=false;return;}
+  pendingRestore=null;$('#bk-confirm').innerHTML='';
+  st.textContent=`Restored ${pl(ops.length,'entry')}.`+(lost?` ${pl(lost,'photo')} couldn't be restored.`:'');
+}
+
+function closeForm(){const d=$('#dlg');if(d.open)d.close();editing=null;}
+function fail(m){const e=$('#f-err');e.textContent=m;e.hidden=false;}
+
+$('#frm').addEventListener('submit',async ev=>{
+  ev.preventDefault();if(!editing)return;
+  const {kind,id,childId}=editing,R=cur(),v=s=>($(s)?.value||'').trim();let data;
+  if(kind==='child'){
+    const name=v('#f-name'),dob=v('#f-dob');if(!name)return fail('Add a name.');if(!dob)return fail('Add a date of birth.');
+    const c=document.querySelector('input[name="f-color"]:checked');data={kind,name,dob,color:c?+c.value:0};
+  }else if(kind==='measure'){
+    const date=v('#f-date'),hs=v('#f-h'),ws=v('#f-w');if(!date)return fail('Add the date it was measured.');
+    if(!hs&&!ws)return fail('Add a height, a weight, or both.');
+    const hc=hs?parseFloat(hs):null,wk=ws?parseFloat(ws):null;
+    if(hs&&!(hc>=20&&hc<=250))return fail('Height should be in centimetres, between 20 and 250.');
+    if(ws&&!(wk>=0.5&&wk<=200))return fail('Weight should be in kilograms, between 0.5 and 200.');
+    data={kind,childId,date,note:v('#f-note')};if(hc!==null)data.heightCm=hc;if(wk!==null)data.weightKg=wk;
+  }else if(kind==='milestone'){
+    const title=v('#f-title'),date=v('#f-date');if(!title)return fail('Say what happened.');if(!date)return fail('Add a date.');
+    data={kind,childId,title,date,category:v('#f-cat'),note:$('#f-note').value.trim()};
+  }else if(kind==='photo'){
+    const date=v('#f-date'),old=id?R[id]:null;
+    if(!date)return fail('Add the date the photo was taken.');
+    if(!editing.blob&&!old)return fail('Choose a photo first.');
+    data={kind,childId,date,caption:v('#f-cap'),birthday:$('#f-bday').checked};
+    if(editing.blob){
+      if(sample){data.localUrl=URL.createObjectURL(editing.blob);}
+      else{
+        const btn=$('#frm button[type="submit"]');btn.disabled=true;btn.textContent='Uploading…';
+        try{data.fileId=await uploadPhoto(editing.blob);}
+        catch(e){btn.disabled=false;btn.textContent=id?'Save changes':'Add';return fail(e&&e.code==='http'&&e.status===403?'Your Google Drive may be full. Free up some space, then try again.':'The photo didn\'t upload. Check your connection and try again.');}
+      }
+    }else{if(old.fileId)data.fileId=old.fileId;if(old.localUrl)data.localUrl=old.localUrl;}
+    if(editing.blob&&old){if(old.fileId&&!sample)editing.oldAsset=old.fileId;if(old.localUrl)URL.revokeObjectURL(old.localUrl);}
+  }else{
+    const body=$('#f-body').value.replace(/\s+$/,''),written=v('#f-written');
+    if(body.replace(/^Dear [^\n]*,?\s*/,'').trim().length===0)return fail('Write something in the letter first.');
+    if(!written)return fail('Add the date you wrote it.');
+    data={kind,childId,title:v('#f-title'),body,written};
+  }
+  const nid=id||newId(kind),oa=editing.oldAsset;
+  const ok=await put(nid,data);
+  if(ok&&oa)deletePhotoFile(oa);
+  if(!ok){const btn=$('#frm button[type="submit"]');if(btn){btn.disabled=false;btn.textContent=id?'Save changes':'Add';}}
+  if(ok){closeForm();if(kind==='child'){view.child=nid;if(!id)view.tab='growth';}else{view.tab=kind==='measure'?'growth':kind==='letter'?'letters':'timeline';}render();toast(id?'Saved':kind==='child'?data.name+' added':kind==='letter'?'Letter saved':kind==='photo'?'Photo added':'Added');}
+});
+
+/* ---------- events ---------- */
+document.addEventListener('click',async ev=>{
+  const b=ev.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  if(a==='child'){view.child=b.dataset.id;render();}
+  else if(a==='compare'){view.child='compare';render();}
+  else if(a==='tab'){view.tab=b.dataset.tab;render();}
+  else if(a==='metric'){view.metric=b.dataset.m;render();}
+  else if(a==='add'){openForm(b.dataset.kind,null);}
+  else if(a==='add-photo'){openForm('photo',null,b.dataset.date?{date:b.dataset.date,bday:!!b.dataset.bday}:null);}
+  else if(a==='photo'){openPhoto(b.dataset.id);}
+  else if(a==='backup'){openBackup();}
+  else if(a==='bdays'){openBirthdays(b.dataset.id);}
+  else if(a==='connect'){connect();}
+  else if(a==='lock'){lock();}
+  else if(a==='setup-edit'){status='setup';render();}
+  else if(a==='copy-origin'){try{await navigator.clipboard.writeText(location.origin);toast('Copied');}catch(e){toast('Select the address and copy it');}}
+  else if(a==='setup-save'){
+    const v=($('#f-client').value||'').trim(),er=$('#setup-err');
+    if(!/^[A-Za-z0-9-]+\.apps\.googleusercontent\.com$/.test(v)){er.textContent='That doesn\'t look like a Client ID. It should end in .apps.googleusercontent.com.';er.hidden=false;return;}
+    clientId=v;lsSet('gub-client-id',v);status='signin';signinMsg='';render();loadGis().catch(()=>{});
+  }
+
+  else if(a==='do-backup'){doBackup(b);}
+  else if(a==='do-restore'){doRestore(b);}
+  else if(a==='edit'){const r=cur()[b.dataset.id];if(r)openForm(r.kind,b.dataset.id);}
+  else if(a==='letter'){const id=b.dataset.id;openLetters.has(id)?openLetters.delete(id):openLetters.add(id);render();}
+  else if(a==='sample-on'){sampleRecs=buildSample();sample=true;view.child='ex_maya';view.tab='growth';render();}
+  else if(a==='sample-off'){sample=false;sampleRecs=null;view.child=null;render();}
+  else if(a==='close'){closeForm();}
+  else if(a==='delete'){
+    if(!editing)return;
+    if(!deleteArmed){deleteArmed=true;b.classList.add('armed');b.textContent='Tap again to delete';const w=$('#del-warn');if(w)w.hidden=false;return;}
+    const {kind,id}=editing;closeForm();
+    if(kind==='child'){const kids=Object.entries(cur()).filter(([,v])=>v.childId===id).map(([k])=>k);for(const k of kids)await remove(k);}
+    await remove(id);if(view.child===id)view.child=null;render();toast('Deleted');
+  }
+});
+$('#dlg').addEventListener('close',()=>{editing=null;});
+
+boot();
+})();
+</script>
