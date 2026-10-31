@@ -19,7 +19,7 @@
 :root{
   --bg:#F6F8F1; --surface:#FFFFFF; --sunk:#ECF0E4; --ink:#262B22; --muted:#5C6455; --line:#D4DBC8;
   --accent:#262B22; --accent-ink:#F6F8F1; --paper:#FFFFFF; --paper-line:#E3EAD6;
-  --wood:#E8D9B8; --wood-edge:#CDB98E; --wood-ink:#6B5428; --danger:#B3392B;
+  --wood:#E8D9B8; --wood-edge:#CDB98E; --wood-ink:#6B5428; --danger:#B3392B; --tooth:#FFFDF7; --gum:#F4CFDA;
   --c0:#5E8C2F; --c1:#4A6FB5; --c2:#C9703A; --c3:#C2557E; --c4:#A68412;
   --p0:#DCEBC4; --p1:#D9E3F7; --p2:#FFE0CC; --p3:#F6D3E1; --p4:#FBE7A6;
   --q0:#3A4F1E; --q1:#33466E; --q2:#6E4126; --q3:#6E2F48; --q4:#665214;
@@ -31,14 +31,14 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#141912; --surface:#1C2319; --sunk:#252E21; --ink:#E8EDE1; --muted:#A2AC97; --line:#33402D;
   --accent:#C9E3A6; --accent-ink:#1A2312; --paper:#1F271C; --paper-line:#2E3929;
-  --wood:#4A3E28; --wood-edge:#5E4F34; --wood-ink:#E3CB98; --danger:#F08A7A;
+  --wood:#4A3E28; --wood-edge:#5E4F34; --wood-ink:#E3CB98; --danger:#F08A7A; --tooth:#EDE8DA; --gum:#4B2C3B;
   --c0:#9CCB6B; --c1:#8FB0EE; --c2:#F0A06E; --c3:#EB8FB5; --c4:#E2C35A;
   --p0:#2C3A22; --p1:#232C40; --p2:#3D2A1F; --p3:#3A2330; --p4:#3A3317;
   --q0:#C9E3A6; --q1:#B9CBF2; --q2:#F6C3A0; --q3:#F0B5CC; --q4:#EFD889; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#141912; --surface:#1C2319; --sunk:#252E21; --ink:#E8EDE1; --muted:#A2AC97; --line:#33402D;
   --accent:#C9E3A6; --accent-ink:#1A2312; --paper:#1F271C; --paper-line:#2E3929;
-  --wood:#4A3E28; --wood-edge:#5E4F34; --wood-ink:#E3CB98; --danger:#F08A7A;
+  --wood:#4A3E28; --wood-edge:#5E4F34; --wood-ink:#E3CB98; --danger:#F08A7A; --tooth:#EDE8DA; --gum:#4B2C3B;
   --c0:#9CCB6B; --c1:#8FB0EE; --c2:#F0A06E; --c3:#EB8FB5; --c4:#E2C35A;
   --p0:#2C3A22; --p1:#232C40; --p2:#3D2A1F; --p3:#3A2330; --p4:#3A3317;
   --q0:#C9E3A6; --q1:#B9CBF2; --q2:#F6C3A0; --q3:#F0B5CC; --q4:#EFD889; color-scheme:dark}
@@ -240,6 +240,92 @@ code{background:var(--sunk);padding:1px 6px;border-radius:6px;font-size:13px;ove
 .file-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .status-line{font-size:13.5px;color:var(--muted)}
 
+/* Entry types: milestones are bold tinted cards, notes are plain with a colour bar, memories are paper */
+.mlist li.ty-milestone .t{font-family:var(--f-display);font-weight:400;font-size:17px}
+.mlist li.ty-note{background:var(--surface);box-shadow:inset 4px 0 0 var(--tq);padding:10px 14px 10px 18px}
+.mlist li.ty-note .t{font-size:14.5px}
+.mlist li.ty-note .nt{font-family:var(--f-body);font-size:14.5px;line-height:1.45;color:var(--muted)}
+.mlist li.ty-memory{background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--tb)}
+.mlist .tn{grid-column:1/-1;font-size:13px;color:var(--tq)}
+.thumbs{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.th{border:none;padding:0;background:none;height:84px;display:flex;align-items:center;cursor:zoom-in}
+.th img{height:84px;width:auto;max-width:150px;object-fit:contain;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.12);display:block}
+.th img[src^="data:image/gif"]{width:84px;background:var(--sunk)}
+.filters{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:-4px 0 0;padding:2px 0}
+.filters::-webkit-scrollbar{display:none}
+.fchip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-weight:600;font-size:13.5px;white-space:nowrap;color:var(--muted)}
+.fchip span{font-weight:500;opacity:.75}
+.fchip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+/* Kind-of-entry switch in forms */
+.tseg{display:grid;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr));background:var(--sunk);border-radius:999px;padding:3px}
+.tseg label{position:relative;text-align:center;padding:8px 6px;border-radius:999px;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer}
+.tseg input{position:absolute;opacity:0;pointer-events:none}
+.tseg label:has(input:checked){background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.tseg label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:1px}
+.att{display:flex;flex-wrap:wrap;gap:10px}
+.att:empty{display:none}
+.att-i{position:relative;height:72px}
+.att-i img{height:72px;width:auto;max-width:120px;min-width:40px;object-fit:contain;border-radius:8px;background:var(--sunk);display:block}
+.att-x{position:absolute;top:-8px;right:-8px;width:28px;height:28px;border-radius:50%;border:2px solid var(--surface);background:var(--ink);color:var(--bg);font-weight:700;font-size:16px;line-height:1;display:grid;place-items:center;padding:0}
+/* Teeth */
+.chart.mouth{display:flex;justify-content:center}
+.picker svg{display:block;width:100%;max-width:270px;margin:0 auto}
+.picker [data-act="tooth"]{cursor:pointer}
+.picker [data-act="tooth"]:focus-visible{outline:none}
+.picker [data-act="tooth"]:focus-visible rect{stroke:var(--accent)!important;stroke-width:3!important}
+.tooth-key{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);justify-content:center}
+.tooth-key i{display:inline-block;width:11px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:6px;border:1.6px solid var(--kid,var(--ink));background:var(--tooth)}
+.tooth-key i.nt{background:none;border-style:dashed;border-color:var(--muted)}
+.tooth-key i.lo{background:none;border-style:dashed}
+.sel-line{font-size:13px;color:var(--muted);text-align:center;min-height:1.2em}
+/* Floating add button */
+.fab{position:fixed;right:max(16px, env(safe-area-inset-right, 0px));bottom:calc(18px + env(safe-area-inset-bottom, 0px));z-index:15;background:var(--accent);color:var(--accent-ink);border:none;border-radius:999px;padding:12px 22px 12px 18px;font-weight:700;font-size:16px;box-shadow:0 6px 18px rgba(20,30,15,.28);display:inline-flex;align-items:center;gap:8px;min-height:52px}
+.fab svg{width:20px;height:20px}
+#app.with-fab{padding-bottom:76px}
+body:has(#app.with-fab) .toast{bottom:calc(84px + env(safe-area-inset-bottom, 0px))}
+.choices{display:grid;gap:10px}
+.choice{display:grid;grid-template-columns:42px minmax(0,1fr);gap:1px 12px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:16px;padding:12px 14px;color:var(--ink)}
+.choice:hover{border-color:var(--muted)}
+.choice .ci{grid-row:1/3;width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--tb);color:var(--tq)}
+.choice .ci svg{width:22px;height:22px}
+.choice b{font-size:16px;font-weight:700}
+.choice .cd{font-size:13.5px;color:var(--muted)}
+/* Family home */
+.chip.home .dot{display:none}
+.chip.home svg{width:16px;height:16px}
+.hello{display:flex;flex-direction:column;gap:2px;padding:2px}
+.hello .hand{font-family:var(--f-hand);font-size:24px;color:var(--muted)}
+.hello h2{font-size:clamp(30px,6vw,42px);line-height:1.05}
+.hello p{color:var(--muted);margin-top:6px}
+.kcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+.kcard{background:var(--kidp);border:none;border-radius:var(--r);padding:16px;display:grid;grid-template-columns:64px minmax(0,1fr);gap:2px 14px;align-content:start;text-align:left;color:var(--ink)}
+.kcard:hover{filter:brightness(1.02)}
+.kc-ph{grid-row:1/3;width:64px;height:64px;border-radius:16px;overflow:hidden;background:var(--surface);display:grid;place-items:center;font-family:var(--f-display);font-size:28px;color:var(--kidq)}
+.kc-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.kc-name{font-family:var(--f-display);font-size:24px;align-self:end;line-height:1.1}
+.kc-age{color:var(--kidq);font-size:14px}
+.kc-facts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.kc-facts span{background:var(--surface);border-radius:999px;padding:3px 10px;font-size:13px;font-weight:600}
+.kc-latest{grid-column:1/-1;font-size:13.5px;color:var(--kidq);margin-top:8px}
+.home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.home-grid>div{display:flex;flex-direction:column;gap:16px;min-width:0}
+@media (max-width:760px){.home-grid{grid-template-columns:minmax(0,1fr)}}
+.card h2.ch{font-size:19px;margin-bottom:4px}
+.card.otd{background:var(--p4)}
+.card.otd h2.ch{font-family:var(--f-hand);font-size:28px;font-weight:700;color:var(--q4)}
+.feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.feed li+li{border-top:1px solid var(--line)}
+.card.otd .feed li+li{border-color:rgba(0,0,0,.08)}
+.feed-btn{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:1px 10px;align-items:center;width:100%;text-align:left;background:none;border:none;padding:10px 2px;color:var(--ink)}
+.feed-btn .dot-s{grid-row:1/3;margin:0}
+.feed-btn .ft{font-weight:600;min-width:0}
+.feed-btn .fd{grid-column:2;font-size:13px;color:var(--muted)}
+.feed-btn .fimg{grid-column:3;grid-row:1/3;height:48px;max-width:72px;width:auto;object-fit:contain;border-radius:6px}
+.feed-btn .fimg[src^="data:image/gif"]{width:48px;background:var(--sunk)}
+.nudge{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0}
+.nudge+.nudge{border-top:1px solid var(--line)}
+.nudge p{min-width:0}
+
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;max-width:calc(100vw - 32px);z-index:20}
 .empty{padding:28px;text-align:center;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);display:flex;flex-direction:column;gap:12px;align-items:center}
 .empty .hand{font-family:var(--f-hand);font-size:24px;color:var(--ink)}
@@ -257,6 +343,9 @@ body{margin:0;padding-top:max(20px, env(safe-area-inset-top, 0px));padding-botto
   .seg button{min-height:40px;font-size:15px}
   .rowbtn{min-height:40px;padding:8px 12px;font-size:14px}
   .check input{width:22px;height:22px}
+  .fchip{min-height:40px;font-size:14.5px}
+  .tseg label{min-height:40px;font-size:15px;display:grid;place-items:center}
+  .feed-btn{min-height:52px}
 }
 /* 16px stops iPhones zooming in when a box is tapped */
 .field input,.field select,.field textarea{font-size:16px;min-height:44px}
@@ -269,8 +358,8 @@ body{margin:0;padding-top:max(20px, env(safe-area-inset-top, 0px));padding-botto
   .stats{gap:10px}
   .stats>div{padding:10px 12px}
   .stats dd{font-size:22px}
-  .tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;background:var(--sunk);border-radius:999px;padding:4px}
-  .tab{padding:8px 6px;text-align:center}
+  .tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;background:var(--sunk);border-radius:999px;padding:4px}
+  .tab{padding:8px 4px;text-align:center}
   .sec-head h2{font-size:21px}
   .sec-head>.btn,.sec-head>div{width:100%}
   .sec-head>.btn.primary{justify-content:center}
@@ -308,6 +397,7 @@ body{margin:0;padding-top:max(20px, env(safe-area-inset-top, 0px));padding-botto
   .mini-door{max-width:200px}
   .bdays{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 }
+@media (max-width:440px){.tab .n{display:none}}
 @media (max-width:380px){
   .row2{grid-template-columns:minmax(0,1fr)}
   .stats dd{font-size:20px}
@@ -333,7 +423,7 @@ function addYears(s,n){const [y,m,d]=s.split('-').map(Number);return new Date(Da
 function addMonths(s,n){const [y,m,d]=s.split('-').map(Number);return new Date(Date.UTC(y,m-1+n,d)).toISOString().slice(0,10);}
 function ageYears(dob,s){return (D(s)-D(dob))/(365.2425*864e5);}
 function monthsBetween(a,b){const [y1,m1,d1]=a.split('-').map(Number),[y2,m2,d2]=b.split('-').map(Number);let mo=(y2-y1)*12+(m2-m1);if(d2<d1)mo--;return mo;}
-const pl=(n,w)=>n+' '+w+(n===1?'':'s');
+const pl=(n,w)=>n+' '+(n===1?w:/[^aeiou]y$/.test(w)?w.slice(0,-1)+'ies':w+'s');
 function ageText(dob,s){
   if(D(s)<D(dob))return 'before birth';
   const mo=monthsBetween(dob,s);
@@ -359,6 +449,7 @@ let view={child:null,tab:'growth',metric:'height'};
 let editing=null,deleteArmed=false,openLetters=new Set(),chartSpecs={};
 try{const v=JSON.parse(localStorage.getItem('gub-view')||'null');if(v&&typeof v==='object')view=Object.assign(view,v);}catch(e){}
 if(view.tab==='milestones')view.tab='timeline';
+view.child='home';view.filter='all';
 function remember(){try{localStorage.setItem('gub-view',JSON.stringify(view));}catch(e){}}
 const cur=()=>sample?sampleRecs:storeRecs;
 
@@ -374,16 +465,46 @@ function buildSample(){
   const tm=[[0,49.9,3.35,'Birth'],[2,58.4,5.6,'8-week check'],[6,67.6,7.9,''],[12,75.7,9.6,''],[24,87.1,12.2,'2-year review'],[36,96.1,14.3,''],[48,103.3,16.3,'']];
   mm.forEach((m,i)=>R['ex_mm'+i]={kind:'measure',childId:'ex_maya',date:addMonths('2019-03-14',m[0]),heightCm:m[1],weightKg:m[2],note:m[3]});
   tm.forEach((m,i)=>R['ex_tm'+i]={kind:'measure',childId:'ex_theo',date:addMonths('2022-07-02',m[0]),heightCm:m[1],weightKg:m[2],note:m[3]});
-  [['ex_maya','2019-05-02','First proper smile','Firsts','At Grandma\'s kitchen table.'],
-   ['ex_maya','2020-01-20','First steps','Movement','Three wobbly steps to the sofa.'],
-   ['ex_maya','2020-04-11','First word: "duck"','Words','Said it to every bird, including pigeons.'],
-   ['ex_maya','2023-09-06','Started Reception','School','Red book bag, refused to let go of it.'],
-   ['ex_maya','2025-08-15','Rode a bike without stabilisers','Movement','Round the whole park twice.'],
-   ['ex_theo','2023-02-10','First tooth','Teeth','Bottom front, left.'],
-   ['ex_theo','2023-06-28','First steps','Movement',''],
-   ['ex_theo','2024-03-03','Calls Maya "Mimi"','Words','Still does.'],
-   ['ex_theo','2026-09-08','First day at nursery','School','Didn\'t look back once.']
-  ].forEach((m,i)=>R['ex_ml'+i]={kind:'milestone',childId:m[0],date:m[1],title:m[2],category:m[3],note:m[4]});
+  // [child, date, title, category, note, type, teeth, lost]
+  [['ex_maya','2019-05-02','First proper smile','Firsts','At Grandma\'s kitchen table.','milestone'],
+   ['ex_maya','2019-09-30','First tooth','Teeth','Found it with a spoon at breakfast.','milestone','LLA'],
+   ['ex_maya','2019-10-21','Second tooth','Teeth','','note','LRA'],
+   ['ex_maya','2020-01-08','Two top front teeth','Teeth','','note'],
+   ['ex_maya','2020-01-20','First steps','Movement','Three wobbly steps to the sofa.','milestone'],
+   ['ex_maya','2020-03-02','Top side teeth','Teeth','','note','URB,ULB'],
+   ['ex_maya','2020-04-11','First word: "duck"','Words','Said it to every bird, including pigeons.','milestone'],
+   ['ex_maya','2020-05-18','Bottom side teeth','Teeth','','note','LRB,LLB'],
+   ['ex_maya','2020-08-03','Four molars at once','Teeth','A very grumpy fortnight.','note','URD,ULD,LRD,LLD'],
+   ['ex_maya','2020-12-10','Canines','Teeth','','note','URC,ULC,LRC,LLC'],
+   ['ex_maya','2021-07-19','Last of the back teeth','Teeth','All twenty!','note','URE,ULE,LRE,LLE'],
+   ['ex_maya','2023-09-06','Started Reception','School','Red book bag, refused to let go of it.','milestone'],
+   ['ex_maya','2023-10-31','Trick or treating as a pumpkin','Celebrations','Gave half her sweets to Grandpa "for his teeth".','memory'],
+   ['ex_maya','2024-02-20','First dentist visit','Health','Counted all her teeth and got a sticker.','note'],
+   ['ex_maya','2025-04-19','Swam a width without armbands','Achievement','','milestone'],
+   ['ex_maya','2025-06-03','Lost her first tooth','Teeth','The tooth fairy left £1 and a very small note.','milestone','LLA',true],
+   ['ex_maya','2025-08-15','Rode a bike without stabilisers','Movement','Round the whole park twice.','milestone'],
+   ['ex_maya','2025-09-14','Second wobbly tooth came out','Teeth','In an apple.','note','LRA',true],
+   ['ex_maya','2026-01-15','Eye test at school','Health','All fine.','note'],
+   ['ex_theo','2023-02-10','First tooth','Teeth','Bottom front, left.','milestone'],
+   ['ex_theo','2023-03-20','Second tooth','Teeth','Bottom front, right.','note','LRA'],
+   ['ex_theo','2023-06-01','Top front teeth','Teeth','','note','URA,ULA'],
+   ['ex_theo','2023-06-28','First steps','Movement','','milestone'],
+   ['ex_theo','2023-09-14','Four side teeth','Teeth','','note','URB,ULB,LRB,LLB'],
+   ['ex_theo','2024-01-22','First molars','Teeth','Up most nights for a week.','note','URD,ULD,LRD,LLD'],
+   ['ex_theo','2024-03-03','Calls Maya "Mimi"','Words','Still does.','note'],
+   ['ex_theo','2024-05-30','Canines','Teeth','','note','URC,ULC,LRC,LLC'],
+   ['ex_theo','2024-12-09','Top back molars','Teeth','','note','URE,ULE'],
+   ['ex_theo','2025-04-02','Ate a whole lemon slice and asked for more','Funny moments','','memory'],
+   ['ex_theo','2025-10-29','Carved his first pumpkin','Celebrations','Mostly ate the seeds.','memory'],
+   ['ex_theo','2026-05-12','Chickenpox','Health','Spotty for a week, very brave about the calamine.','note'],
+   ['ex_theo','2026-09-08','First day at nursery','School','Didn\'t look back once.','milestone'],
+   ['ex_theo','2026-10-12','New word: "excavator"','Words','','note']
+  ].forEach((m,i)=>{const r={kind:'milestone',childId:m[0],date:m[1],title:m[2],category:m[3],note:m[4],type:m[5]};if(m[6])r.teeth=m[6];if(m[7])r.toothLost=true;R['ex_ml'+i]=r;});
+  R.ex_beach={kind:'milestone',childId:'ex_maya',date:'2024-08-10',title:'Beach day at Studland',category:'Days out',note:'Built a sandcastle with a moat. The tide won.',type:'memory'};
+  R.ex_lp1={kind:'photo',childId:'ex_maya',date:'2024-08-10',caption:'Beach day at Studland',birthday:false,entryId:'ex_beach',localUrl:sampleScene('beach')};
+  R.ex_lp2={kind:'photo',childId:'ex_maya',date:'2024-08-10',caption:'Beach day at Studland',birthday:false,entryId:'ex_beach',localUrl:sampleScene('castle')};
+  const pk=Object.keys(R).find(k=>R[k].title==='Carved his first pumpkin');
+  R.ex_lp3={kind:'photo',childId:'ex_theo',date:'2025-10-29',caption:'Carved his first pumpkin',birthday:false,entryId:pk,localUrl:sampleScene('pumpkin')};
   R.ex_l1={kind:'letter',childId:'ex_maya',written:'2026-03-14',title:'On your 7th birthday',
     body:'Dear Maya,\n\nToday you turned seven and asked for a cake shaped like a volcano. Dad stayed up until midnight making it erupt.\n\nYou are kind to your little brother even when he knocks down your towers. I hope you keep that.\n\nAll my love,\nMum'};
   R.ex_l2={kind:'letter',childId:'ex_theo',written:'2022-07-09',title:'Your first week',
@@ -394,6 +515,21 @@ function buildSample(){
    ['ex_theo','2022-07-02',0,'Hello, Theo',1],['ex_theo','2023-07-02',1,'First candle',0],['ex_theo','2024-07-03',2,'Digger cake',1],['ex_theo','2026-07-02',4,'Dinosaur party',0]
   ].forEach((p,i)=>R['ex_ph'+i]={kind:'photo',childId:p[0],date:p[1],caption:p[3],birthday:true,localUrl:samplePic(p[2],p[0]==='ex_maya'?0:1,p[4])});
   return R;
+}
+function sampleScene(k){
+  let s='<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">';
+  if(k==='pumpkin'){
+    s+='<rect width="800" height="600" fill="#2E2A3D"/><circle cx="650" cy="110" r="48" fill="#F4E9C8"/><rect y="470" width="800" height="130" fill="#3B3426"/>'+
+      '<ellipse cx="400" cy="380" rx="200" ry="150" fill="#E9782F"/><ellipse cx="400" cy="380" rx="90" ry="150" fill="#F08A3C"/><path d="M392 236q-6-40 22-60" stroke="#5E8C2F" stroke-width="18" fill="none" stroke-linecap="round"/>'+
+      '<path d="M310 340l40-50 40 50z M410 340l40-50 40 50z" fill="#FFD66B"/><path d="M300 420l30 30 30-24 40 30 40-30 30 24 30-30-20 70h-160z" fill="#FFD66B"/>';
+  }else{
+    s+='<rect width="800" height="600" fill="#CFE8F7"/><circle cx="650" cy="120" r="56" fill="#FBD46D"/>';
+    if(k==='beach')s+='<rect y="270" width="800" height="140" fill="#7FB8DA"/><path d="M0 300q50-18 100 0t100 0 100 0 100 0 100 0 100 0 100 0 100 0" stroke="#FFFFFF" stroke-width="6" fill="none" opacity=".7"/><rect y="400" width="800" height="200" fill="#F3DFAF"/>'+
+      '<path d="M170 430h90l-12 90h-66z" fill="#E86F5A"/><path d="M180 430q35-60 70 0" stroke="#262B22" stroke-width="5" fill="none"/><path d="M560 300v-140" stroke="#8A6A3A" stroke-width="8"/><path d="M560 160q-80 10-120 60q60-30 120-20q60-10 120 20q-40-50-120-60z" fill="#C2557E"/>';
+    else s+='<rect y="230" width="800" height="370" fill="#F3DFAF"/><ellipse cx="400" cy="470" rx="300" ry="70" fill="#7FB8DA"/><ellipse cx="400" cy="440" rx="210" ry="40" fill="#F3DFAF"/>'+
+      '<path d="M260 440v-110h40v-24h30v24h40v-60h60v60h40v-24h30v24h40v110z" fill="#DDB977" stroke="#B99555" stroke-width="4"/><path d="M430 270v-70" stroke="#262B22" stroke-width="5"/><path d="M432 200l50 16-50 16z" fill="#E86F5A"/><path d="M380 440v-50q20-24 40 0v50z" fill="#B99555"/>';
+  }
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s+'</svg>');
 }
 function samplePic(age,tone,tall){
   const W=tall?600:800,H=tall?800:600,bg=[['#E3F0D6','#C9E2B4'],['#DCEAF6','#BFD8EE']][tone],cx=W/2,by=H*0.72,n=Math.min(age,7);
@@ -418,10 +554,21 @@ const IC={
   bike:'<circle cx="6" cy="16" r="3.5"/><circle cx="18" cy="16" r="3.5"/><path d="M6 16l3.5-7h6L18 16M9.5 9l3 7H6M13.5 6.5h2.5l-.5 2.5"/>',
   swim:'<path d="M3 9c1.5 0 1.5-1.5 3-1.5S7.5 9 9 9s1.5-1.5 3-1.5S13.5 9 15 9s1.5-1.5 3-1.5S19.5 9 21 9M3 13.5c1.5 0 1.5-1.5 3-1.5s1.5 1.5 3 1.5 1.5-1.5 3-1.5 1.5 1.5 3 1.5 1.5-1.5 3-1.5 1.5 1.5 3 1.5M3 18c1.5 0 1.5-1.5 3-1.5S7.5 18 9 18s1.5-1.5 3-1.5 1.5 1.5 3 1.5 1.5-1.5 3-1.5 1.5 1.5 3 1.5"/>',
   hair:'<circle cx="6" cy="6.5" r="2.5"/><circle cx="6" cy="17.5" r="2.5"/><path d="M8.2 8L20 17.5M8.2 16L20 6.5"/>',
-  sleep:'<path d="M19.5 14.5A8 8 0 1 1 9.5 4.5a6.5 6.5 0 0 0 10 10z"/>'
+  sleep:'<path d="M19.5 14.5A8 8 0 1 1 9.5 4.5a6.5 6.5 0 0 0 10 10z"/>',
+  cake:'<path d="M4 20.5h16M5.5 20.5v-6.5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v6.5M5.5 16c1.5 1.2 3 1.2 4.3 0s2.9-1.2 4.3 0 3 1.2 4.4 0M12 12V8.5"/><path d="M12 3.5c1.2 1.4 1.2 2.9 0 3.6-1.2-.7-1.2-2.2 0-3.6z" fill="currentColor"/>',
+  star:'<path d="M12 3.8l2.5 5.2 5.7.8-4.1 4 1 5.7L12 16.8l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/>',
+  heart:'<path d="M12 19.5s-7.5-4.5-7.5-10A4.2 4.2 0 0 1 12 7a4.2 4.2 0 0 1 7.5 2.5c0 5.5-7.5 10-7.5 10z"/>',
+  health:'<circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/>',
+  pencil:'<path d="M15.5 4.5l4 4L9 19H5v-4z"/><path d="M13 7l4 4"/>',
+  camera:'<path d="M4 8.5a1.5 1.5 0 0 1 1.5-1.5h2.5l1.5-2h5l1.5 2h2.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.5"/>',
+  house:'<path d="M4 11l8-6.5 8 6.5M6.5 9.5V19.5h11V9.5"/><path d="M10 19.5v-5h4v5"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>'
 };
+const icon=(k,sw)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw||1.8}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[k]}</svg>`;
 const IC_RULES=[
-  ['tooth',/\b(tooth|teeth|toothy)\b/i,'Teeth'],
+  ['tooth',/\b(tooth|teeth|toothy|molars?|canines?)\b/i,'Teeth'],
+  ['health',/\b(doctor|gp|nurse|hospital|jabs?|vaccinations?|injection|poorly|fever|cough|chickenpox|eye test|dentist|check-?up)\b/i,'Health'],
+  ['cake',/\b(birthday|cake)\b/i,'Birthday'],
   ['steps',/\b(steps?|walk|walks|walked|walking|toddled)\b/i],
   ['swim',/\b(swim|swims|swam|swimming)\b/i],
   ['bike',/\b(bike|bicycle|cycled|cycling|scooter|trike|stabilisers|stabilizers)\b/i],
@@ -435,7 +582,111 @@ function milestoneIcon(m){
   const t=m.title||'';let k=null;
   for(const [n,re] of IC_RULES)if(re.test(t)){k=n;break;}
   if(!k)for(const [n,,cat] of IC_RULES)if(cat&&m.category===cat){k=n;break;}
+  if(!k&&m.category==='Achievement')k='star';
+  if(!k&&entryType(m)==='memory')k='heart';
   return k?`<span class="mi-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg></span>`:'';
+}
+
+/* ---------- kinds of timeline entry ----------
+   Saved as kind 'milestone' with a 'type' field. Older entries have no type: Health ones count as notes,
+   funny moments and hobbies as memories, and everything else as milestones. */
+const TYPES={
+  milestone:{label:'Milestone',plural:'Milestones',desc:'Big moments: firsts, birthdays and achievements.',ph:'e.g. First steps',ic:'star',tint:['--p4','--q4'],
+    cats:['Firsts','Birthday','Achievement','Movement','Words','Teeth','School','Other']},
+  note:{label:'Note',plural:'Notes',desc:'Little updates: health, new words, a new tooth.',ph:'e.g. Saw the GP about a cough',ic:'pencil',tint:['--p1','--q1'],
+    cats:['Health','Words','Teeth','Growing','Sleep','Food','Other']},
+  memory:{label:'Memory',plural:'Memories',desc:'Days out, holidays, funny moments and things you did together.',ph:'e.g. Building sandcastles at the beach',ic:'heart',tint:['--p3','--q3'],
+    cats:['Days out','Holidays','Celebrations','Funny moments','Family','Hobbies','Other']}
+};
+function entryType(e){return TYPES[e.type]?e.type:({Health:'note','Funny moments':'memory',Hobbies:'memory'}[e.category]||'milestone');}
+const plw=(n,one,many)=>n+' '+(n===1?one:many);
+function linkedPhotos(R,eid){return Object.entries(R).filter(([,v])=>v.kind==='photo'&&v.entryId===eid).map(([id,v])=>Object.assign({id},v)).sort((a,b)=>(a.date||'').localeCompare(b.date||'')||a.id.localeCompare(b.id));}
+const isSolo=(R,p)=>!(p.entryId&&R[p.entryId]);
+function timelineItems(R,cid){return [...recs(R,cid,'milestone'),...recs(R,cid,'photo').filter(p=>isSolo(R,p))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));}
+const itemTitle=x=>x.kind==='photo'?(x.caption||'Photo'):(x.title||'');
+const itemLabel=x=>x.kind==='photo'?'Photo':x.kind==='letter'?'Letter':TYPES[entryType(x)].label;
+
+/* ---------- teeth ----------
+   Codes: U/L (upper/lower), R/L (the child's right/left), A–E (central incisor … second molar). */
+const TT=['A','B','C','D','E'],TNAME={A:'central incisor',B:'lateral incisor',C:'canine',D:'first molar',E:'second molar'};
+const TW={A:1,B:.84,C:.9,D:1.2,E:1.34},TD={A:1.1,B:1.02,C:1.12,D:1.16,E:1.22};
+const ALLT=[];['U','L'].forEach(j=>['R','L'].forEach(sd=>TT.forEach(t=>ALLT.push(j+sd+t))));
+const toothName=c=>(c[0]==='U'?'Upper':'Lower')+' '+(c[1]==='R'?'right':'left')+' '+TNAME[c[2]];
+const LOST_RE=/\b(lost|fell out|came out|pulled out|knocked out|tooth fairy)\b/i;
+const DENT_RE=/\b(dentist|dental|orthodontist|braces)\b/i;
+function parseTeeth(str){
+  const t=' '+String(str||'').toLowerCase()+' ';
+  const jaws=[];if(/\b(bottom|lower)\b/.test(t))jaws.push('L');if(/\b(top|upper)\b/.test(t))jaws.push('U');
+  const ty=[];
+  if(/\b(front|central|centre|middle)\b/.test(t))ty.push('A');
+  if(/\b(lateral|side)\b/.test(t))ty.push('B');
+  if(/\b(canines?|eye ?teeth|eye ?tooth|fangs?)\b/.test(t))ty.push('C');
+  if(/\bfirst molars?\b/.test(t))ty.push('D');
+  if(/\b(second molars?|back molars?|back teeth|back tooth|last molars?)\b/.test(t))ty.push('E');
+  if(!ty.includes('D')&&!ty.includes('E')&&/\bmolars?\b/.test(t))ty.push('D');
+  let sides=[];if(/\bleft\b/.test(t))sides.push('L');if(/\bright\b/.test(t))sides.push('R');
+  if(!sides.length&&/\b(teeth|two|both|pair|four|molars|canines|fangs)\b/.test(t))sides=['R','L'];
+  if(!jaws.length&&/\bfour\b/.test(t))jaws.push('U','L');
+  if(!jaws.length||!ty.length||!sides.length)return [];
+  const out=[];jaws.forEach(j=>sides.forEach(sd=>ty.forEach(x=>out.push(j+sd+x))));return ALLT.filter(c=>out.includes(c));
+}
+function entryTeeth(e){
+  if(typeof e.teeth==='string'&&e.teeth.trim())return ALLT.filter(c=>e.teeth.split(/[\s,]+/).includes(c));
+  return parseTeeth((e.title||'')+' '+(e.note||''));
+}
+const entryLost=e=>typeof e.toothLost==='boolean'?e.toothLost:LOST_RE.test(e.title||'');
+function teethState(R,cid,skipId){
+  const st={},unplaced=[];
+  recs(R,cid,'milestone').filter(e=>e.category==='Teeth'&&e.id!==skipId).forEach(e=>{
+    const codes=entryTeeth(e),lost=entryLost(e);if(!codes.length){unplaced.push(e);return;}
+    codes.forEach(c=>{const x=st[c]||(st[c]={});if(lost){if(!x.lost)x.lost=e.date;}else if(!x.in)x.in=e.date;});
+  });
+  const ins=Object.values(st).filter(x=>x.in).map(x=>x.in).sort();
+  return {st,unplaced,count:ins.length,lost:Object.values(st).filter(x=>x.lost).length,first:ins[0]||null};
+}
+function shortAge(dob,s){const mo=Math.max(0,monthsBetween(dob,s));return mo<36?mo+'m':Math.floor(mo/12)+'y'+(mo%12?' '+mo%12+'m':'');}
+/* A mouth seen from the front: the child's right is on the viewer's left. */
+function mouthSVG(s,W){
+  const fs=s.fs||(W<380?10.5:11.5),LH=fs+3;
+  const colW=s.colW==='auto'?Math.max(W<380?76:92,s.colMin||0):(s.colW||0);
+  const span=100*Math.PI/180,gp=.14,tot=TT.reduce((a,t)=>a+TW[t]+gp,0),k=span/tot;
+  const room=W/2-(colW?colW+18:6);
+  const rx=Math.max(46,Math.min(s.maxRx||130,room/(1+.62*k*TD.E)));
+  const u=rx*k,ry=rx*1.04,cx=W/2,maxD=TD.E*u;
+  const off={};let acc=gp/2;TT.forEach(t=>{off[t]=(acc+TW[t]/2)*k;acc+=TW[t]+gp;});
+  const P=(c,cyU,cyL)=>{const up=c[0]==='U',th=Math.PI/2+(c[1]==='R'?1:-1)*off[c[2]],co=Math.cos(th),si=Math.sin(th),w=TW[c[2]]*u,d=TD[c[2]]*u;
+    return up?{x:cx+rx*co,y:cyU-ry*si,nx:co,ny:-si,rot:90-th*180/Math.PI,w,d}:{x:cx+rx*co,y:cyL+ry*si,nx:co,ny:si,rot:th*180/Math.PI-90,w,d};};
+  const maxYU=Math.max(...ALLT.filter(c=>c[0]==='U').map(c=>P(c,0,0).y))+maxD*.75;
+  const minYL=Math.min(...ALLT.filter(c=>c[0]==='L').map(c=>P(c,0,0).y))-maxD*.75;
+  const cyU=0,cyL=maxYU-minYL+(s.pick?10:16),mid=(maxYU+cyL+minYL)/2;
+  const pos={};ALLT.forEach(c=>pos[c]=P(c,cyU,cyL));
+  const a0=off.E+TW.E*k/2+.03;
+  const arc=(up,cy)=>{let d='';for(let i=0;i<=40;i++){const th=Math.PI/2-a0+2*a0*i/40,x=cx+rx*Math.cos(th),y=up?cy-ry*Math.sin(th):cy+ry*Math.sin(th);d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);}return d;};
+  let g=[[1,cyU],[0,cyL]].map(([up,cy])=>`<path d="${arc(up,cy)}" style="fill:none;stroke:var(--gum)" stroke-width="${(maxD+10).toFixed(1)}" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
+  const KID=s.kid||'var(--ink)';
+  const TS={in:`fill:var(--tooth);stroke:${KID};stroke-width:1.6`,lost:`fill:none;stroke:${KID};stroke-width:1.4;stroke-dasharray:3 2.5`,
+    none:'fill:none;stroke:var(--muted);stroke-opacity:.6;stroke-width:1.2;stroke-dasharray:2.5 2.5',had:'fill:var(--tooth);stroke:var(--muted);stroke-width:1.2',sel:`fill:${KID};stroke:${KID};stroke-width:1.6`};
+  ALLT.forEach(c=>{const p=pos[c],st=(s.states&&s.states[c])||'none',r=Math.min(p.w,p.d)*.4,tip=toothName(c)+(s.tips&&s.tips[c]?': '+s.tips[c]:'');
+    g+=`<g transform="translate(${p.x.toFixed(1)} ${p.y.toFixed(1)}) rotate(${p.rot.toFixed(1)})"${s.pick?` data-act="tooth" data-code="${c}" role="button" tabindex="0" aria-pressed="${st==='sel'}" aria-label="${esc(toothName(c))}"`:''}><title>${esc(tip)}</title><rect x="${(-p.w/2+.9).toFixed(1)}" y="${(-p.d/2).toFixed(1)}" width="${(p.w-1.8).toFixed(1)}" height="${p.d.toFixed(1)}" rx="${r.toFixed(1)}" style="${TS[st]}${s.pick?';pointer-events:all':''}"/></g>`;});
+  let lab='';const tops=[],bots=[];
+  if(colW&&s.labels){
+    const lxL=cx-rx-maxD/2-16,lxR=cx+rx+maxD/2+16;
+    [['U','R'],['U','L'],['L','R'],['L','L']].forEach(([j,sd])=>{
+      const items=TT.map(t=>j+sd+t).filter(c=>s.labels[c]&&s.labels[c].length).map(c=>({c,y:pos[c].y,h:s.labels[c].length*LH})).sort((a,b)=>a.y-b.y);
+      for(let i=1;i<items.length;i++){const pb=items[i-1].y+items[i-1].h/2+4;if(items[i].y-items[i].h/2<pb)items[i].y=pb+items[i].h/2;}
+      if(items.length&&j==='U'){const l=items[items.length-1],ex=l.y+l.h/2-(mid-3);if(ex>0)items.forEach(o=>o.y-=ex);}
+      if(items.length&&j==='L'){const f=items[0],ex=(mid+3)-(f.y-f.h/2);if(ex>0)items.forEach(o=>o.y+=ex);}
+      const left=sd==='R',lx=left?lxL:lxR;
+      items.forEach(o=>{const p=pos[o.c],sx=p.x+p.nx*(p.d/2+2),sy=p.y+p.ny*(p.d/2+2);
+        lab+=`<path d="M${sx.toFixed(1)} ${sy.toFixed(1)} L${(left?lx+4:lx-4).toFixed(1)} ${o.y.toFixed(1)}" style="fill:none;stroke:var(--muted);opacity:.55" stroke-width="1"/>`;
+        s.labels[o.c].forEach((ln,i)=>{const y=o.y-o.h/2+LH*i+LH/2+fs*.36;
+          lab+=`<text x="${lx.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${left?'end':'start'}" font-size="${fs}">${ln.map(pt=>`<tspan style="fill:${pt.c||'var(--ink)'}"${pt.b?' font-weight="700"':''}>${esc(pt.t)}</tspan>`).join('')}</text>`;});
+        tops.push(o.y-o.h/2);bots.push(o.y+o.h/2);});
+    });
+  }
+  const sl=`<text x="${(cx-rx*.45).toFixed(1)}" y="${(mid+4).toFixed(1)}" text-anchor="middle" font-size="11" style="fill:var(--muted)">Right</text><text x="${(cx+rx*.45).toFixed(1)}" y="${(mid+4).toFixed(1)}" text-anchor="middle" font-size="11" style="fill:var(--muted)">Left</text>`;
+  const yMin=Math.min(cyU-ry-maxD,...tops),yMax=Math.max(cyL+ry+maxD,...bots),pad=4,H=Math.ceil(yMax-yMin+2*pad);
+  return `<svg ${s.fluid?'width="100%"':`width="${W}" height="${H}"`} viewBox="0 0 ${W} ${H}" role="${s.pick?'group':'img'}" aria-label="${esc(s.aria||'Baby teeth')}"><g transform="translate(0 ${(pad-yMin).toFixed(1)})">${g}${lab}${sl}</g></svg>`;
 }
 
 /* ---------- storage: a private app folder in your own Google Drive ---------- */
@@ -566,17 +817,20 @@ function render(){
   if(!sample&&status!=='ready'){app.innerHTML=gateView();drawCharts();return;}
   const R=cur(),kids=children(R);
   if(!sample&&kids.length===0){app.innerHTML=welcome();drawCharts();return;}
-  if(view.child!=='compare'&&!kids.find(k=>k.id===view.child))view.child=kids[0].id;
-  if(view.child==='compare'&&kids.length<1)view.child=kids[0].id;
+  if(view.child!=='compare'&&view.child!=='home'&&!kids.find(k=>k.id===view.child))view.child='home';
+  if(view.child==='compare'&&kids.length<2)view.child='home';
   let h=header(kids);
   if(sample)h+=`<div class="banner"><p><b>Example family.</b> Maya and Theo are made up, and nothing you change here is saved.</p><button class="btn primary" data-act="sample-off">${status==='ready'?'Go to my own book':'Close example'}</button></div>`;
-  h+=view.child==='compare'?compareView(kids,R):childView(kids.find(k=>k.id===view.child),R);
+  h+=view.child==='home'?homeView(kids,R):view.child==='compare'?compareView(kids,R):childView(kids.find(k=>k.id===view.child),R);
+  const fab=view.child==='home'||(view.child!=='compare'&&view.tab==='timeline');
+  if(fab)h+=`<button class="fab" data-act="chooser" aria-label="Add to ${view.child==='home'?'a':'the'} timeline">${icon('plus',2.6)}Add</button>`;
+  app.classList.toggle('with-fab',fab);
   app.innerHTML=h;drawCharts();hydratePhotos();remember();
 }
 
 function header(kids){
   return `<header class="top"><div class="brand"><h1>Sprout</h1><span class="hand">${sample?'the example family':'our family'}</span><span class="spacer"></span>${!sample&&status==='ready'?'<button class="btn" data-act="backup">Back up</button><button class="btn quiet" data-act="lock" title="Close your book on this device until you sign in again">Lock</button>':''}</div>
-  <nav class="kids" aria-label="Children">${kids.map(k=>`<button class="chip" style="--kid:var(--c${k.color||0});--kidp:var(--p${k.color||0})" data-act="child" data-id="${k.id}" aria-pressed="${view.child===k.id}"><span class="dot"></span>${esc(k.name)}</button>`).join('')}
+  <nav class="kids" aria-label="Children"><button class="chip home" data-act="home" aria-pressed="${view.child==='home'}">${icon('house',2)}Home</button>${kids.map(k=>`<button class="chip" style="--kid:var(--c${k.color||0});--kidp:var(--p${k.color||0})" data-act="child" data-id="${k.id}" aria-pressed="${view.child===k.id}"><span class="dot"></span>${esc(k.name)}</button>`).join('')}
   ${kids.length>1?`<button class="chip cmp" data-act="compare" aria-pressed="${view.child==='compare'}"><span class="dot"></span>Side by side</button>`:''}
   <button class="chip add" data-act="add" data-kind="child">+ Add a child</button></nav></header>`;
 }
@@ -586,7 +840,7 @@ function welcome(){
   return `<header class="top"><div class="brand"><h1>Sprout</h1><span class="hand">our family</span></div></header>
   <section class="welcome"><div><h2>A place for the pencil marks on the door frame.</h2>
   <p>Give each child their own page for heights and weights, the milestones you want to remember, and letters for them to open when they're older. Put everyone side by side on one chart whenever you like.</p>
-  <ul><li>Growth in cm and kg, charted by age</li><li>A timeline of milestones and photos</li><li>Letters for them to read when they're older</li></ul>
+  <ul><li>Growth in cm and kg, charted by age</li><li>A timeline of milestones, notes, memories and photos</li><li>A picture of their teeth, tooth by tooth</li><li>Letters for them to read when they're older</li></ul>
   ${msg}
   <div class="acts">${status==='ready'?'<button class="btn primary" data-act="add" data-kind="child">Add your first child</button>':''}<button class="btn" data-act="sample-on">Look around an example family</button>${status==='ready'?'<button class="btn quiet" data-act="backup">Restore from a backup</button>':''}</div>
   <p style="margin-top:14px;font-size:13px">Everything is saved in a private app folder in your Google Drive.</p></div>
@@ -632,7 +886,8 @@ function prevWith(ms,f,before){for(let i=before-1;i>=0;i--)if(typeof ms[i][f]===
 function childView(c,R){
   const kid=`--kid:var(--c${c.color||0});--kidp:var(--p${c.color||0});--kidq:var(--q${c.color||0})`,t=todayStr();
   const ms=recs(R,c.id,'measure'),mi=recs(R,c.id,'milestone',true),le=recs(R,c.id,'letter',true),ph=recs(R,c.id,'photo',true);
-  const lh=lastWith(ms,'heightCm'),lw=lastWith(ms,'weightKg');
+  const lh=lastWith(ms,'heightCm'),lw=lastWith(ms,'weightKg'),solo=ph.filter(p=>isSolo(R,p)),ts=teethState(R,c.id);
+  const cnt={milestone:0,note:0,memory:0};mi.forEach(e=>cnt[entryType(e)]++);
   const pvh=lh&&prevWith(ms,'heightCm',lh.i),pw=lw&&prevWith(ms,'weightKg',lw.i);
   const stat=(lbl,val,unit,delta)=>`<div><dt>${lbl}</dt><dd>${val}${unit?` <small>${unit}</small>`:''}</dd>${delta?`<p class="delta">${delta}</p>`:''}</div>`;
   let h=`<section class="hero" style="${kid}"><div class="hero-head"><div><h1>${esc(c.name)}</h1>
@@ -641,11 +896,12 @@ function childView(c,R){
   <dl class="stats">
    ${stat('Height',lh?fmt1(lh.m.heightCm):'—',lh?'cm':'',lh?(pvh?`${lh.m.heightCm-pvh.heightCm>=0?'+':''}${fmt1(lh.m.heightCm-pvh.heightCm)} cm since ${fmtMonth(pvh.date)}`:`measured ${fmtMonth(lh.m.date)}`):'not measured yet')}
    ${stat('Weight',lw?fmtKg(lw.m.weightKg):'—',lw?'kg':'',lw?(pw?`${lw.m.weightKg-pw.weightKg>=0?'+':''}${fmtKg(lw.m.weightKg-pw.weightKg)} kg since ${fmtMonth(pw.date)}`:`weighed ${fmtMonth(lw.m.date)}`):'not weighed yet')}
-   ${stat('Memories',mi.length+ph.length,'',(mi.length||ph.length)?pl(mi.length,'milestone')+', '+pl(ph.length,'photo'):'none yet')}
+   ${stat('Milestones',cnt.milestone,'',(mi.length||ph.length)?[plw(cnt.note,'note','notes'),plw(cnt.memory,'memory','memories'),pl(ph.length,'photo')].join(', '):'none yet')}
    ${stat('Letters',le.length,'',le[0]?'latest: '+esc(le[0].title||fmtDate(le[0].written)):'none yet')}
   </dl></section>
-  <div class="tabs" role="tablist">${[['growth','Growth',ms.length],['timeline','Timeline',mi.length+ph.length],['letters','Letters',le.length]].map(([k,l,n])=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${view.tab===k}">${l}<span class="n">${n}</span></button>`).join('')}</div>`;
-  if(view.tab==='timeline')h+=timelineView(c,mi,ph,kid);
+  <div class="tabs" role="tablist">${[['growth','Growth',ms.length],['timeline','Timeline',mi.length+solo.length],['teeth','Teeth',ts.count],['letters','Letters',le.length]].map(([k,l,n])=>`<button class="tab" role="tab" data-act="tab" data-tab="${k}" aria-selected="${view.tab===k}">${l}<span class="n">${n}</span></button>`).join('')}</div>`;
+  if(view.tab==='timeline')h+=timelineView(c,R,mi,ph,kid);
+  else if(view.tab==='teeth')h+=teethView(c,R,kid,ts);
   else if(view.tab==='letters')h+=lettersView(c,le,kid);
   else h+=growthView(c,ms,kid);
   return h;
@@ -684,25 +940,63 @@ function openBirthdays(cid){
    <div class="dlg-acts"><div></div><div><button type="button" class="btn quiet" data-act="close">Close</button></div></div>`;
   showDlg();
 }
-const CAT_TINT={Firsts:'t-yel',Words:'t-rose',Movement:'t-blue',Teeth:'t-pis',Health:'t-pis',School:'t-apr',Hobbies:'t-blue','Funny moments':'t-yel'};
-function timelineView(c,mi,ph,kid){
-  let h=`<section class="sec" style="${kid}"><div class="sec-head"><h2>Timeline</h2><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn quiet" data-act="bdays" data-id="${c.id}">Every birthday (${new Set(ph.filter(p=>p.birthday).map(p=>Math.floor(monthsBetween(c.dob,p.date)/12))).size} of ${Math.floor(monthsBetween(c.dob,todayStr())/12)+1})</button>${canPhotos()?'<button class="btn" data-act="add-photo">Add a photo</button>':''}<button class="btn primary" data-act="add" data-kind="milestone">Add a milestone</button></div></div>`;
-  const items=[...mi,...ph].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  if(!items.length)return h+`<div class="empty"><span class="hand">Nothing here yet.</span><span>First smile, first word, first day at school: add the moments and photos you want to keep.</span></div></section>`;
+const CAT_TINT={Firsts:'t-yel',Words:'t-rose',Movement:'t-blue',Teeth:'t-pis',Health:'t-pis',School:'t-apr',Hobbies:'t-blue','Funny moments':'t-yel',
+  Birthday:'t-rose',Achievement:'t-yel',Growing:'t-pis',Sleep:'t-blue',Food:'t-apr','Days out':'t-blue',Holidays:'t-blue',Celebrations:'t-rose',Family:'t-apr'};
+function entryLi(c,R,e,opt){
+  const ty=entryType(e),tint=CAT_TINT[e.category]||(ty==='memory'?'t-apr':ty==='note'?'t-blue':''),cat=e.category&&e.category!=='Other'?e.category:'';
+  const pill=ty==='milestone'?cat:TYPES[ty].label+(cat?' · '+cat:'');
+  const ph=linkedPhotos(R,e.id);
+  let teeth='';
+  if(opt&&opt.teeth&&e.category==='Teeth'){const tc=entryTeeth(e);
+    teeth=`<div class="tn">${tc.length?(entryLost(e)?'Came out: ':'')+esc(tc.map(toothName).join(', ')):'Not on the picture yet. Tap Edit to choose the teeth.'}</div>`;}
+  return `<li class="ty-${ty} ${tint}"><div class="t">${milestoneIcon(e)}${esc(e.title)}${pill?`<span class="pill">${esc(pill)}</span>`:''}</div><button class="rowbtn" data-act="edit" data-id="${e.id}">Edit</button>
+    <div class="d">${fmtDate(e.date)} · ${ageText(c.dob,e.date)}</div>${teeth}${e.note?`<div class="nt">${esc(e.note)}</div>`:''}
+    ${ph.length?`<div class="thumbs">${ph.map((p,i)=>`<button class="th" data-act="photo" data-nav="entry" data-id="${p.id}" aria-label="Photo ${i+1} of ${ph.length}"><img src="${esc(photoSrc(p))}" data-fid="${esc(p.fileId||'')}" alt="${esc(e.title)}" loading="lazy"></button>`).join('')}</div>`:''}</li>`;
+}
+function photoLi(c,m){
+  return `<li class="ph-item"><button class="ph-btn" data-act="photo" data-id="${m.id}"><img src="${esc(photoSrc(m))}" data-fid="${esc(m.fileId||'')}" alt="${esc(m.caption||'Photo of '+c.name)}" loading="lazy"></button>
+    <div class="t">${esc(m.caption||'Photo')}${m.birthday?'<span class="pill">Birthday</span>':''}</div><button class="rowbtn" data-act="edit" data-id="${m.id}">Edit</button>
+    <div class="d">${fmtDate(m.date)} · ${ageText(c.dob,m.date)}</div></li>`;
+}
+const EMPTY_TL={all:'First smile, first word, a day at the beach: tap Add to keep the moments and photos you want to remember.',
+  milestone:'Milestones are the big moments: firsts, birthdays and achievements.',note:'Notes are little updates, such as a health check or a new word.',
+  memory:'Memories are days out, holidays and funny moments.',photo:'Photos added on their own show here. Photos added to an entry show with that entry.'};
+function timelineView(c,R,mi,ph,kid){
+  const solo=ph.filter(p=>isSolo(R,p)),cnt={milestone:0,note:0,memory:0};mi.forEach(e=>cnt[entryType(e)]++);
+  const f=['all','milestone','note','memory','photo'].includes(view.filter)?view.filter:'all';
+  const years=Math.floor(monthsBetween(c.dob,todayStr())/12)+1,got=new Set(ph.filter(p=>p.birthday).map(p=>Math.floor(monthsBetween(c.dob,p.date)/12))).size;
+  let h=`<section class="sec" style="${kid}"><div class="sec-head"><h2>Timeline</h2><button class="btn quiet" data-act="bdays" data-id="${c.id}">Every birthday (${got} of ${years})</button></div>
+  <div class="filters" role="group" aria-label="Show">${[['all','Everything',mi.length+solo.length],['milestone','Milestones',cnt.milestone],['note','Notes',cnt.note],['memory','Memories',cnt.memory],['photo','Photos',solo.length]].map(([k,l,n])=>`<button class="fchip" data-act="filter" data-f="${k}" aria-pressed="${f===k}">${l} <span>${n}</span></button>`).join('')}</div>`;
+  const items=[...mi.filter(e=>f==='all'||entryType(e)===f),...(f==='all'||f==='photo'?solo:[])].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  if(!items.length)return h+`<div class="empty"><span class="hand">Nothing here yet.</span><span>${EMPTY_TL[f]}</span></div></section>`;
   const groups=new Map();
   items.forEach(m=>{const y=Math.max(0,Math.floor(monthsBetween(c.dob,m.date)/12));if(!groups.has(y))groups.set(y,[]);groups.get(y).push(m);});
   h+='<div class="ages">';
   [...groups.entries()].sort((a,b)=>b[0]-a[0]).forEach(([y,list])=>{
     const from=addYears(c.dob,y);
     h+=`<div class="age-group"><h3>${y===0?'First year':'Age '+y}<span>${fmtMonth(from)} – ${fmtMonth(addMonths(addYears(c.dob,y+1),-1))}</span></h3><ul class="mlist">
-    ${list.map(m=>m.kind==='photo'
-      ?`<li class="ph-item"><button class="ph-btn" data-act="photo" data-id="${m.id}"><img src="${esc(photoSrc(m))}" data-fid="${esc(m.fileId||'')}" alt="${esc(m.caption||'Photo of '+c.name)}" loading="lazy"></button>
-        <div class="t">${esc(m.caption||'Photo')}${m.birthday?'<span class="pill">Birthday</span>':''}</div><button class="rowbtn" data-act="edit" data-id="${m.id}">Edit</button>
-        <div class="d">${fmtDate(m.date)} · ${ageText(c.dob,m.date)}</div></li>`
-      :`<li class="${CAT_TINT[m.category]||''}"><div class="t">${milestoneIcon(m)}${esc(m.title)}${m.category?`<span class="pill">${esc(m.category)}</span>`:''}</div><button class="rowbtn" data-act="edit" data-id="${m.id}">Edit</button>
-    <div class="d">${fmtDate(m.date)} · ${ageText(c.dob,m.date)}</div>${m.note?`<div class="nt">${esc(m.note)}</div>`:''}</li>`).join('')}</ul></div>`;
+    ${list.map(m=>m.kind==='photo'?photoLi(c,m):entryLi(c,R,m)).join('')}</ul></div>`;
   });
   return h+'</div></section>';
+}
+
+function teethView(c,R,kid,ts){
+  const labels={},states={},tips={};
+  ALLT.forEach(code=>{const x=ts.st[code];if(!x){states[code]='none';tips[code]='not yet';return;}
+    states[code]=x.lost?'lost':'in';const L=[];
+    if(x.in)L.push([{t:fmtDate(x.in)}]);if(x.lost)L.push([{t:'out '+fmtMonth(x.lost),c:'var(--muted)'}]);labels[code]=L;
+    tips[code]=(x.in?'came through '+fmtDate(x.in):'')+(x.lost?(x.in?', ':'')+'came out '+fmtDate(x.lost):'');});
+  chartSpecs.mouth={type:'mouth',labels,states,tips,colW:'auto',kid:`var(--c${c.color||0})`,aria:`${c.name}'s baby teeth: ${ts.count} of 20 have come through`};
+  const hist=recs(R,c.id,'milestone').filter(e=>e.category==='Teeth'||DENT_RE.test((e.title||'')+' '+(e.note||'')));
+  const sub=ts.count?`${ts.count} of 20${ts.lost?', '+ts.lost+' out':''}`:'none yet';
+  let h=`<section class="sec" style="${kid}"><div class="sec-head"><h2>Teeth</h2><button class="btn primary" data-act="add-tooth">${ts.count?'Add a tooth':'Add the first tooth'}</button></div>
+  <figure class="card"><figcaption>Baby teeth <span>${sub}</span></figcaption>${ts.first?`<p class="muted" style="font-size:13.5px;margin-top:-4px">First tooth at ${ageText(c.dob,ts.first)} old, on ${fmtDate(ts.first)}.</p>`:''}
+  <div class="chart mouth" data-chart="mouth"></div>
+  <div class="tooth-key"><span><i></i>Came through</span><span><i class="nt"></i>Not yet</span>${ts.lost?'<span><i class="lo"></i>Came out</span>':''}</div>
+  <p class="muted" style="font-size:13px;text-align:center">As you look at ${esc(c.name)}, so their right is on your left. Teeth come from entries in the Teeth category.</p></figure>`;
+  if(!hist.length)return h+`<div class="empty"><span class="hand">Waiting for the first one.</span><span>When a tooth comes through, tap the button above and choose it on the picture.</span></div></section>`;
+  h+=`<div class="age-group"><h3>Dental history<span>${pl(hist.length,'entry')}</span></h3><ul class="mlist">${hist.map(e=>entryLi(c,R,e,{teeth:true})).join('')}</ul></div>`;
+  return h+'</section>';
 }
 
 function lettersView(c,le,kid){
@@ -743,7 +1037,29 @@ function compareView(kids,R){
    ${rows.map(r=>`<tr><td>${r.a===0?'Birth':pl(r.a,'year')}</td>${r.cells.map(x=>`<td class="r">${x===null?'<span class="muted">—</span>':x+' '+unit}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'<p class="muted">Add measurements to compare them here.</p>'}
    </figure>
    <figure class="card"><figcaption>The door frame <span>latest heights, older marks faint</span></figcaption><div class="chart" data-chart="door"></div></figure>
-  </div>${birthdaysCompare(kids,R)}</section>`;
+  </div>${teethCompare(kids,R)}${birthdaysCompare(kids,R)}</section>`;
+}
+function teethCompare(kids,R){
+  const data=kids.map(k=>({k,ts:teethState(R,k.id)}));
+  const head=`<figcaption>Teeth <span>how old each child was when each tooth came through</span></figcaption>`;
+  if(!data.some(d=>d.ts.count))return `<figure class="card">${head}<p class="muted">Add teeth on each child's Teeth tab and they'll line up here.</p></figure>`;
+  const labels={},states={},tips={};
+  ALLT.forEach(code=>{const has=data.map(d=>d.ts.st[code]&&d.ts.st[code].in);if(!has.some(Boolean)){states[code]='none';return;}
+    states[code]='in';const ln=[];
+    data.forEach((d,i)=>{if(i)ln.push({t:' · ',c:'var(--muted)'});ln.push(has[i]?{t:shortAge(d.k.dob,has[i]),c:`var(--c${d.k.color||0})`,b:1}:{t:'–',c:'var(--muted)'});});
+    labels[code]=[ln];tips[code]=data.map((d,i)=>d.k.name+' '+(has[i]?ageText(d.k.dob,has[i]):'not yet')).join(', ');});
+  chartSpecs.tmouth={type:'mouth',labels,states,tips,colW:'auto',colMin:28*kids.length+10,aria:'Age each child got each baby tooth'};
+  chartSpecs.tsteps={step:true,unit:'',label:'teeth',h:220,series:data.filter(d=>d.ts.count).map(({k,ts})=>{
+    const ev={};Object.values(ts.st).forEach(x=>{if(x.in)ev[x.in]=(ev[x.in]||0)+1;});let n=0;
+    const points=[{x:0,y:0,t:k.name+' · born · no teeth'}];
+    Object.keys(ev).sort().forEach(dt=>{n+=ev[dt];points.push({x:ageYears(k.dob,dt),y:n,t:`${k.name} · ${ageText(k.dob,dt)} · ${plw(n,'tooth','teeth')}`});});
+    return {color:k.color||0,name:k.name,points};})};
+  const legend=`<div class="legend">${kids.map(k=>`<span style="--kid:var(--c${k.color||0})"><i></i>${esc(k.name)}</span>`).join('')}</div>`;
+  return `<figure class="card">${head}${legend}
+   <div class="chart mouth" data-chart="tmouth"></div>
+   <p class="muted" style="font-size:13px;text-align:center">Ages in months (m), in the order ${esc(kids.map(k=>k.name).join(', '))}. A dash means not yet. As you look at them, so their right is on your left.</p>
+   <figcaption style="margin-top:10px">Teeth by age <span>number of teeth through</span></figcaption>
+   <div class="chart" data-chart="tsteps"></div></figure>`;
 }
 function birthdaysCompare(kids,R){
   const t=todayStr(),info=kids.map(k=>({k,ph:recs(R,k.id,'photo').filter(p=>p.birthday),age:Math.max(0,Math.floor(monthsBetween(k.dob,t)/12))}));
@@ -759,6 +1075,68 @@ function birthdaysCompare(kids,R){
   return `<figure class="card"><figcaption>Birthdays <span>each child at the same birthday</span></figcaption>
    ${rows?`<div class="bd-cmp" style="--n:${kids.length}"><div class="bd-cells bd-names">${kids.map(k=>`<span><span class="dot-s" style="--kid:var(--c${k.color||0})"></span>${esc(k.name)}</span>`).join('')}</div>${rows}</div>`
    :'<p class="muted">Mark photos as birthday photos and they\'ll line up here by age.</p>'}</figure>`;
+}
+
+/* ---------- family home ---------- */
+const kidVars=k=>{const n=k.color||0;return `--kid:var(--c${n});--kidp:var(--p${n});--kidq:var(--q${n})`;};
+function nextBday(k,t){let y=Math.max(0,Math.floor(monthsBetween(k.dob,t)/12));const today=addYears(k.dob,y)===t;if(!today)y++;return {y,date:addYears(k.dob,y),today};}
+const dayMonth=s=>new Date(D(s)).toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'});
+function kidCard(k,R,t){
+  const ms=recs(R,k.id,'measure'),lh=lastWith(ms,'heightCm'),ts=teethState(R,k.id),nb=nextBday(k,t);
+  const pic=recs(R,k.id,'photo',true)[0],last=timelineItems(R,k.id)[0],facts=[];
+  if(lh)facts.push(fmt1(lh.m.heightCm)+' cm');
+  if(ts.count&&monthsBetween(k.dob,t)<96)facts.push(plw(ts.count,'tooth','teeth'));
+  facts.push(nb.today?'Birthday today!':`${nb.y===0?'Born':ordinal(nb.y)+' birthday'} ${untilText(nb.date)}`);
+  return `<button class="kcard" style="${kidVars(k)}" data-act="child" data-id="${k.id}">
+   <span class="kc-ph">${pic?`<img src="${esc(photoSrc(pic))}" data-fid="${esc(pic.fileId||'')}" alt="" loading="lazy">`:esc((k.name||'?').slice(0,1))}</span>
+   <span class="kc-name">${esc(k.name)}</span><span class="kc-age">${ageText(k.dob,t)} old</span>
+   <span class="kc-facts">${facts.map(f=>`<span>${esc(f)}</span>`).join('')}</span>
+   ${last?`<span class="kc-latest">Latest: ${esc(itemTitle(last))} · ${fmtDate(last.date)}</span>`:''}</button>`;
+}
+function feedItem(R,x,kmap,sub){
+  const k=kmap[x.childId],thumb=x.kind==='photo'?x:x.kind==='milestone'?linkedPhotos(R,x.id)[0]:null;
+  const act=x.kind==='photo'?`data-act="photo" data-id="${x.id}"`:`data-act="goto" data-id="${x.childId}" data-tab="${x.kind==='letter'?'letters':'timeline'}"`;
+  return `<li><button class="feed-btn" ${act}><span class="dot-s" style="${kidVars(k)}"></span><span class="ft">${esc(itemTitle(x)||x.title||'A letter')}</span>
+   <span class="fd">${sub}</span>${thumb?`<img class="fimg" src="${esc(photoSrc(thumb))}" data-fid="${esc(thumb.fileId||'')}" alt="" loading="lazy">`:''}</button></li>`;
+}
+function homeView(kids,R){
+  const t=todayStr(),yr=+t.slice(0,4),hr=new Date().getHours(),greet=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+  const names=kids.map(k=>esc(k.name)),fam=names.length>1?names.slice(0,-1).join(', ')+' &amp; '+names[names.length-1]:names[0];
+  const kmap=Object.fromEntries(kids.map(k=>[k.id,k]));
+  const all=Object.entries(R).map(([id,v])=>Object.assign({id},v)).filter(v=>kmap[v.childId]);
+  const ents=all.filter(v=>v.kind==='milestone'),phs=all.filter(v=>v.kind==='photo'),lets=all.filter(v=>v.kind==='letter');
+  let h=`<section class="hello"><p class="hand">${greet}</p><h2>${fam}</h2><p>${[plw(ents.length,'moment','moments')+' kept',pl(phs.length,'photo'),pl(lets.length,'letter')].join(' · ')}</p></section>
+  <div class="kcards">${kids.map(k=>kidCard(k,R,t)).join('')}</div>`;
+  // On this day: anything from the same week in earlier years
+  const otd=[...ents,...phs.filter(p=>isSolo(R,p)),...lets].map(v=>({v,dt:v.date||v.written})).filter(o=>o.dt&&+o.dt.slice(0,4)<yr&&Math.abs(D(yr+o.dt.slice(4))-D(t))<=3*864e5).sort((a,b)=>b.dt.localeCompare(a.dt));
+  if(otd.length)h+=`<section class="card otd"><h2 class="ch">This week, in years gone by</h2><ul class="feed">${otd.slice(0,6).map(({v,dt})=>{const n=yr-+dt.slice(0,4);
+    return feedItem(R,v,kmap,`${n===1?'A year':n+' years'} ago${dt.slice(5)===t.slice(5)?' today':', '+dayMonth(dt)} · ${esc(kmap[v.childId].name)}`);}).join('')}</ul></section>`;
+  const latest=kids.flatMap(k=>timelineItems(R,k.id)).sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,6);
+  const bdays=kids.map(k=>({k,nb:nextBday(k,t)})).sort((a,b)=>a.nb.date.localeCompare(b.nb.date));
+  const nudges=[];
+  kids.forEach(k=>{const ms=recs(R,k.id,'measure'),last=ms[ms.length-1],lim=monthsBetween(k.dob,t)<60?3:6;
+    if(!last)nudges.push([`${esc(k.name)} hasn't been measured yet.`,`data-act="add-for" data-kind="measure" data-child="${k.id}"`,'Measure']);
+    else if(monthsBetween(last.date,t)>=lim)nudges.push([`${esc(k.name)} was last measured in ${fmtMonth(last.date)}.`,`data-act="add-for" data-kind="measure" data-child="${k.id}"`,'Measure']);});
+  bdays.forEach(({k,nb})=>{const days=Math.round((D(nb.date)-D(t))/864e5);if(nb.y>0&&days<=21)nudges.push([`${esc(k.name)}'s ${ordinal(nb.y)} birthday is ${nb.today?'today':untilText(nb.date)}. Write them a letter?`,`data-act="add-for" data-kind="letter" data-child="${k.id}"`,'Write']);});
+  if(!sample){const lb=lsGet('gub-last-backup');if(!lb||monthsBetween(lb,t)>=1)nudges.push([lb?`Your last backup was on ${fmtDate(lb)}.`:'You haven\'t made a backup on this device yet.','data-act="backup"','Back up']);}
+  h+=`<div class="home-grid"><div><section class="card"><h2 class="ch">Latest</h2>${latest.length?`<ul class="feed">${latest.map(x=>feedItem(R,x,kmap,`${esc(kmap[x.childId].name)} · ${fmtDate(x.date)} · ${itemLabel(x)}`)).join('')}</ul>`:'<p class="muted">Nothing on the timelines yet. Tap Add to start.</p>'}</section></div>
+  <div><section class="card"><h2 class="ch">Coming up</h2><ul class="feed">${bdays.map(({k,nb})=>`<li><button class="feed-btn" data-act="child" data-id="${k.id}"><span class="dot-s" style="${kidVars(k)}"></span><span class="ft">${esc(k.name)} turns ${nb.y}</span><span class="fd">${nb.today?'Today!':untilText(nb.date).replace(/^in/,'In')+' · '+dayMonth(nb.date)}</span></button></li>`).join('')}</ul></section>
+  <section class="card"><h2 class="ch">Little reminders</h2>${nudges.length?nudges.map(([m,act,lbl])=>`<div class="nudge"><p>${m}</p><button class="btn" ${act}>${lbl}</button></div>`).join(''):'<p class="muted">All up to date.</p>'}</section></div></div>`;
+  return h;
+}
+function chooserHtml(){
+  const R=cur(),kids=children(R),c=R[editing.childId],many=view.child==='home'&&kids.length>1;
+  const opts=Object.entries(TYPES).map(([k,T])=>[k,T.label,T.desc,T.ic,T.tint]);
+  if(canPhotos())opts.push(['photo','Just a photo','A photo on its own, with a caption.','camera',['--p0','--q0']]);
+  return `<h2>${many?'Add to a timeline':'Add to '+esc(c.name)+'\'s timeline'}</h2>
+   ${many?`<div class="kids" role="group" aria-label="Whose timeline">${kids.map(k=>`<button type="button" class="chip" style="${kidVars(k)}" data-act="choose-kid" data-id="${k.id}" aria-pressed="${k.id===editing.childId}"><span class="dot"></span>${esc(k.name)}</button>`).join('')}</div>`:''}
+   <div class="choices">${opts.map(([k,l,d,ic,tn])=>`<button type="button" class="choice" data-act="choose" data-type="${k}" style="--tb:var(${tn[0]});--tq:var(${tn[1]})"><span class="ci">${icon(ic)}</span><b>${l}</b><span class="cd">${d}</span></button>`).join('')}</div>
+   <div class="dlg-acts"><div></div><div><button type="button" class="btn quiet" data-act="close">Cancel</button></div></div>`;
+}
+function openChooser(){
+  const kids=children(cur());if(!kids.length)return;
+  editing={kind:'chooser',childId:kids.find(k=>k.id===view.child)?view.child:kids[0].id};
+  $('#frm').innerHTML=chooserHtml();showDlg();
 }
 
 /* ---------- charts ---------- */
@@ -784,7 +1162,7 @@ function lineChart(s,W){
   s.series.forEach(se=>{
     const p=se.points.slice().sort((a,b)=>a.x-b.x);if(!p.length)return;
     const c=`var(--c${se.color})`;
-    const d=p.map((q,i)=>(i?'L':'M')+sx(q.x).toFixed(1)+' '+sy(q.y).toFixed(1)).join(' ');
+    const d=s.step?p.map((q,i)=>i?'H'+sx(q.x).toFixed(1)+' V'+sy(q.y).toFixed(1):'M'+sx(q.x).toFixed(1)+' '+sy(q.y).toFixed(1)).join(' '):p.map((q,i)=>(i?'L':'M')+sx(q.x).toFixed(1)+' '+sy(q.y).toFixed(1)).join(' ');
     if(s.series.length===1&&p.length>1)marks+=`<path d="${d} L${sx(p[p.length-1].x).toFixed(1)} ${H-m.b} L${sx(p[0].x).toFixed(1)} ${H-m.b} Z" style="fill:${c};opacity:.1"/>`;
     marks+=`<path d="${d}" style="fill:none;stroke:${c}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
     p.forEach((q,i)=>{const last=i===p.length-1;marks+=`<circle cx="${sx(q.x).toFixed(1)}" cy="${sy(q.y).toFixed(1)}" r="${last?5.5:3.5}" style="fill:${last?c:'var(--surface)'};stroke:${c}" stroke-width="2"><title>${esc(q.t)}</title></circle>`;});
@@ -814,7 +1192,7 @@ function doorChart(s,W){
 }
 function drawCharts(){
   if($('[data-chart="welcomeDoor"]'))welcomeDoorSpec();
-  document.querySelectorAll('[data-chart]').forEach(el=>{const s=chartSpecs[el.dataset.chart];if(!s)return;const w=Math.max(240,Math.floor(el.clientWidth));el.innerHTML=s.type==='door'?doorChart(s,w):lineChart(s,w);});
+  document.querySelectorAll('[data-chart]').forEach(el=>{const s=chartSpecs[el.dataset.chart];if(!s)return;const w=Math.max(240,Math.floor(el.clientWidth));el.innerHTML=s.type==='door'?doorChart(s,w):s.type==='mouth'?mouthSVG(s,Math.min(w,620)):lineChart(s,w);});
 }
 let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(drawCharts,120);});
 
@@ -823,8 +1201,9 @@ const CATS=['Firsts','Words','Movement','Teeth','Health','School','Hobbies','Fun
 function field(id,label,input,hint){return `<div class="field"><label for="${id}">${label}</label>${input}${hint?`<span class="hint">${hint}</span>`:''}</div>`;}
 function openForm(kind,id,preset){
   const R=cur(),d=id?R[id]:{},t=todayStr();deleteArmed=false;
-  const child=kind==='child'?null:R[id?d.childId:view.child];
-  editing={kind,id,childId:kind==='child'?null:(id?d.childId:view.child)};
+  const cid=kind==='child'?null:(id?d.childId:(preset&&preset.childId)||view.child);
+  const child=kind==='child'?null:R[cid];
+  editing={kind,id,childId:cid};
   let h='',title='';
   if(kind==='child'){
     title=id?'Edit '+esc(d.name):'Add a child';
@@ -840,10 +1219,21 @@ function openForm(kind,id,preset){
       `<span class="hint muted" style="font-size:12.5px;margin-top:-8px">Fill in one or both. 1 lb = 0.454 kg, 1 inch = 2.54 cm.</span>`+
       field('f-note','Note (optional)',`<input id="f-note" maxlength="140" value="${esc(d.note)}" placeholder="e.g. 2-year review">`);
   }else if(kind==='milestone'){
-    title=(id?'Edit milestone':'Add a milestone')+' for '+esc(child.name);
-    h=field('f-title','What happened',`<input id="f-title" required maxlength="120" value="${esc(d.title)}" placeholder="e.g. First steps">`)+
-      `<div class="row2">${field('f-date','Date',`<input id="f-date" type="date" required min="${child.dob}" max="${t}" value="${esc(d.date||t)}">`)}${field('f-cat','Type',`<select id="f-cat">${CATS.map(c=>`<option ${c===(d.category||'Firsts')?'selected':''}>${c}</option>`).join('')}</select>`)}</div>`+
-      field('f-note','The story (optional)',`<textarea id="f-note" maxlength="2000">${esc(d.note)}</textarea>`);
+    const pre=preset||{},ty=id?entryType(d):(TYPES[pre.type]?pre.type:'milestone'),cat=d.category||pre.category||TYPES[ty].cats[0];
+    Object.assign(editing,{type:ty,newPhotos:[],removed:new Set(),teeth:new Set(id?entryTeeth(d):[]),toothLost:id?entryLost(d):false,tlTouched:!!id});
+    title=entryHeading(ty,!!id,child.name);
+    h=`<div class="tseg" role="radiogroup" aria-label="Kind of entry">${Object.entries(TYPES).map(([k,T])=>`<label><input type="radio" name="f-type" value="${k}" ${k===ty?'checked':''}>${T.label}</label>`).join('')}</div>
+      <p class="hint muted" id="f-type-hint" style="font-size:13px;margin-top:-6px">${TYPES[ty].desc}</p>`+
+      field('f-title','What happened',`<input id="f-title" required maxlength="120" value="${esc(d.title||pre.title||'')}" placeholder="${TYPES[ty].ph}">`)+
+      `<div class="row2">${field('f-date','Date',`<input id="f-date" type="date" required min="${child.dob}" max="${t}" value="${esc(d.date||t)}">`)}${field('f-cat','Category',`<select id="f-cat">${catOptions(ty,cat)}</select>`)}</div>`+
+      `<div class="field" id="f-teeth" ${cat==='Teeth'?'':'hidden'}><span class="lbl">Which teeth?</span>
+        <div class="tseg" style="--cols:2" role="radiogroup" aria-label="Came through or came out"><label><input type="radio" name="f-tl" value="in" ${editing.toothLost?'':'checked'}>Came through</label><label><input type="radio" name="f-tl" value="out" ${editing.toothLost?'checked':''}>Came out</label></div>
+        <div class="picker" id="f-picker"></div><p class="sel-line" id="f-tsel" aria-live="polite"></p>
+        <span class="hint">Tap the teeth on the picture. It's drawn as you look at ${esc(child.name)}, so their right is on your left. Shaded teeth are already in the book.</span></div>`+
+      field('f-note',ty==='note'?'Details (optional)':'The story (optional)',`<textarea id="f-note" maxlength="2000">${esc(d.note)}</textarea>`)+
+      (canPhotos()?`<div class="field"><span class="lbl">Photos (optional)</span><div class="att" id="f-att"></div>
+        <span class="btn file-btn" style="align-self:flex-start">Add photos<input id="f-photos" type="file" accept="image/*" multiple aria-label="Add photos"></span>
+        <span class="hint">From your phone's photo library or your files. Large photos are resized to save space.</span></div>`:'');
   }else if(kind==='photo'){
     title=(id?'Edit photo':'Add a photo')+' of '+esc(child.name);
     const pre=preset||{};const date=d.date||pre.date||t;const bday=id?!!d.birthday:!!pre.bday;
@@ -859,11 +1249,12 @@ function openForm(kind,id,preset){
       field('f-body','Your letter',`<textarea id="f-body" class="hand" required maxlength="20000">${esc(d.body||'Dear '+child.name+',\n\n')}</textarea>`)+
       field('f-written','Written on',`<input id="f-written" type="date" required max="${t}" value="${esc(d.written||t)}">`);
   }
-  $('#frm').innerHTML=`<h2>${title}</h2>${h}<p class="err" id="f-err" hidden></p>
+  $('#frm').innerHTML=`<h2 id="f-h2">${title}</h2>${h}<p class="err" id="f-err" hidden></p>
    <div class="dlg-acts"><div>${id?'<button type="button" class="btn danger" id="del-btn" data-act="delete">Delete</button>':''}</div>
    <div><button type="button" class="btn quiet" data-act="close">Cancel</button><button type="submit" class="btn primary">${id?'Save changes':kind==='letter'?'Save letter':'Add'}</button></div></div>`;
   showDlg();
-  const first=$('#frm input,#frm textarea');if(first&&kind!=='letter')first.focus();
+  if(kind==='milestone'){renderPicker();renderAtt();}
+  const first=$(kind==='milestone'?'#f-title':'#frm input,#frm textarea');if(first&&kind!=='letter'&&!(kind==='milestone'&&!id&&matchMedia('(pointer:coarse)').matches))first.focus();
   const fi=$('#f-file');
   if(fi)fi.addEventListener('change',async()=>{
     const f=fi.files&&fi.files[0];if(!f||!editing)return;
@@ -871,31 +1262,100 @@ function openForm(kind,id,preset){
     try{
       const b=await shrink(f);if(!editing)return;editing.blob=b;
       const p=$('#f-prev');if(p.dataset.url)URL.revokeObjectURL(p.dataset.url);p.dataset.url=URL.createObjectURL(b);p.src=p.dataset.url;p.hidden=false;
-      if(!id&&!preset&&f.lastModified){const ld=new Date(f.lastModified);const ds=ld.getFullYear()+'-'+pad(ld.getMonth()+1)+'-'+pad(ld.getDate());
+      if(!id&&!(preset&&preset.date)&&f.lastModified){const ld=new Date(f.lastModified);const ds=ld.getFullYear()+'-'+pad(ld.getMonth()+1)+'-'+pad(ld.getDate());
         if(D(ds)>=D(child.dob)&&D(ds)<=D(t)){$('#f-date').value=ds;if(isBirthdayish(child.dob,ds))$('#f-bday').checked=true;}}
     }catch(e){editing.blob=null;fail('That photo couldn\'t be read. Try a JPEG or PNG.');}
   });
+}
+function entryHeading(ty,edit,name){return (edit?'Edit ':'Add a ')+TYPES[ty].label.toLowerCase()+' for '+esc(name);}
+function catOptions(ty,curCat){const l=TYPES[ty].cats.slice();if(curCat&&!l.includes(curCat))l.unshift(curCat);return l.map(c=>`<option ${c===curCat?'selected':''}>${esc(c)}</option>`).join('');}
+function renderPicker(){
+  const el=$('#f-picker');if(!el||!editing)return;
+  const R=cur(),c=R[editing.childId],ts=teethState(R,editing.childId,editing.id),states={};
+  ALLT.forEach(code=>{if(editing.teeth.has(code))states[code]='sel';else{const x=ts.st[code];states[code]=x?(x.lost?'lost':'had'):'none';}});
+  el.innerHTML=mouthSVG({states,pick:true,fluid:true,kid:`var(--c${c.color||0})`,aria:'Choose teeth'},320);
+  const n=editing.teeth.size;
+  $('#f-tsel').textContent=n?(n<=2?ALLT.filter(x=>editing.teeth.has(x)).map(toothName).join(', '):plw(n,'tooth','teeth')+' chosen'):'No teeth chosen yet';
+}
+function renderAtt(){
+  const el=$('#f-att');if(!el||!editing)return;
+  const ex=editing.id?linkedPhotos(cur(),editing.id).filter(p=>!editing.removed.has(p.id)):[];
+  el.innerHTML=ex.map(p=>`<div class="att-i"><img src="${esc(photoSrc(p))}" data-fid="${esc(p.fileId||'')}" alt="Attached photo"><button type="button" class="att-x" data-act="att-del" data-pid="${p.id}" aria-label="Remove this photo">×</button></div>`).join('')+
+    editing.newPhotos.map((n,i)=>`<div class="att-i"><img src="${n.url}" alt="New photo"><button type="button" class="att-x" data-act="att-del" data-new="${i}" aria-label="Remove this photo">×</button></div>`).join('');
+  hydratePhotos();
+}
+$('#frm').addEventListener('input',e=>{
+  if(!editing||editing.kind!=='milestone'||e.target.id!=='f-title'||editing.tlTouched)return;
+  const lost=LOST_RE.test(e.target.value);if(lost===editing.toothLost)return;
+  editing.toothLost=lost;const r=$(`input[name="f-tl"][value="${lost?'out':'in'}"]`);if(r)r.checked=true;
+});
+$('#frm').addEventListener('change',async e=>{
+  if(!editing||editing.kind!=='milestone')return;const t=e.target;
+  if(t.name==='f-type'){
+    const ty=t.value,sel=$('#f-cat'),curCat=sel.value,keep=TYPES[ty].cats.includes(curCat)||(editing.id&&cur()[editing.id].category===curCat);
+    editing.type=ty;sel.innerHTML=catOptions(ty,keep?curCat:TYPES[ty].cats[0]);
+    $('#f-h2').innerHTML=entryHeading(ty,!!editing.id,cur()[editing.childId].name);$('#f-type-hint').textContent=TYPES[ty].desc;$('#f-title').placeholder=TYPES[ty].ph;
+    $('label[for="f-note"]').textContent=ty==='note'?'Details (optional)':'The story (optional)';
+    $('#f-teeth').hidden=sel.value!=='Teeth';
+  }else if(t.id==='f-cat'){$('#f-teeth').hidden=t.value!=='Teeth';}
+  else if(t.name==='f-tl'){editing.toothLost=t.value==='out';editing.tlTouched=true;}
+  else if(t.id==='f-photos'){
+    const files=[...(t.files||[])],ed=editing;t.value='';$('#f-err').hidden=true;let bad=0;
+    for(const f of files){try{const b=await shrink(f);if(editing!==ed)return;ed.newPhotos.push({blob:b,url:URL.createObjectURL(b)});renderAtt();}catch(err){bad++;}}
+    if(bad)fail(bad===1?'One photo couldn\'t be read. Try a JPEG or PNG.':bad+' photos couldn\'t be read. Try JPEGs or PNGs.');
+  }
+});
+async function putMany(ops){
+  if(sample){ops.forEach(o=>{if(o.del)delete sampleRecs[o.id];else sampleRecs[o.id]=o.data;});render();return true;}
+  if(status!=='ready'){toast('Open your book with Google Drive first.');return false;}
+  try{await commit(ops);return true;}
+  catch(e){if(!e||e.code!=='auth')toast('Couldn\'t save to Google Drive. Check your connection and try again.');return false;}
+}
+/* Saves an entry together with its photos in one go. Photos are ordinary photo records with an entryId. */
+async function saveEntry(nid,data){
+  const R=cur(),ed=editing,ops=[{id:nid,data}],gone=[],bday=data.category==='Birthday';
+  if(ed.id)linkedPhotos(R,ed.id).forEach(p=>{
+    if(ed.removed.has(p.id)){ops.push({id:p.id,del:true});gone.push(R[p.id]);}
+    else ops.push({id:p.id,data:Object.assign({},R[p.id],{date:data.date,caption:data.title,birthday:bday})});});
+  const btn=$('#frm button[type="submit"]'),n=ed.newPhotos.length;
+  for(let i=0;i<n;i++){
+    const pd={kind:'photo',childId:data.childId,date:data.date,caption:data.title,birthday:bday,entryId:nid};
+    if(sample)pd.localUrl=ed.newPhotos[i].url;
+    else{btn.disabled=true;btn.textContent=n>1?`Uploading ${i+1} of ${n}…`:'Uploading…';
+      try{pd.fileId=await uploadPhoto(ed.newPhotos[i].blob);}
+      catch(e){btn.disabled=false;btn.textContent=ed.id?'Save changes':'Add';fail(e&&e.code==='http'&&e.status===403?'Your Google Drive may be full. Free up some space, then try again.':'A photo didn\'t upload. Check your connection and try again.');return false;}}
+    ops.push({id:newId('photo'),data:pd});
+  }
+  const ok=await putMany(ops);
+  if(ok){gone.forEach(p=>{if(p.localUrl&&sample)URL.revokeObjectURL(p.localUrl);if(!sample&&okFid(p.fileId))deletePhotoFile(p.fileId);});
+    if(!sample)ed.newPhotos.forEach(x=>URL.revokeObjectURL(x.url));}
+  return ok;
 }
 function showDlg(){setTimeout(hydratePhotos,0);const dlg=$('#dlg');if(dlg.open)return;if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');}
 
 const CHEV=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
 function openPhoto(id,nav){
-  const R=cur(),p=R[id];if(!p)return;const c=R[p.childId];editing=null;
-  let arrows='',count='',pre='',back='';
-  if(nav==='bday'&&p.birthday&&c){
-    const list=bdayList(R,p.childId),i=list.findIndex(x=>x.id===id),prev=list[i-1],next=list[i+1];
-    if(prev)arrows+=`<button type="button" class="lb-nav prev" data-act="photo" data-nav="bday" data-id="${prev.id}" aria-label="Previous birthday photo">${CHEV('M15 5l-7 7 7 7')}</button>`;
-    if(next)arrows+=`<button type="button" class="lb-nav next" data-act="photo" data-nav="bday" data-id="${next.id}" aria-label="Next birthday photo">${CHEV('M9 5l7 7-7 7')}</button>`;
-    if(list.length>1)count=`<p class="lb-count">${i+1} of ${list.length} birthday photos</p>`;
+  const R=cur(),p=R[id];if(!p)return;const c=R[p.childId],ent=p.entryId&&R[p.entryId];editing=null;
+  let arrows='',count='',pre='',back='',list=null;
+  if(nav==='bday'&&p.birthday&&c)list=bdayList(R,p.childId);
+  else if(nav==='entry'&&ent)list=linkedPhotos(R,p.entryId);
+  if(list){
+    const i=list.findIndex(x=>x.id===id),prev=list[i-1],next=list[i+1],what=nav==='bday'?'birthday photo':'photo';
+    if(prev)arrows+=`<button type="button" class="lb-nav prev" data-act="photo" data-nav="${nav}" data-id="${prev.id}" aria-label="Previous ${what}">${CHEV('M15 5l-7 7 7 7')}</button>`;
+    if(next)arrows+=`<button type="button" class="lb-nav next" data-act="photo" data-nav="${nav}" data-id="${next.id}" aria-label="Next ${what}">${CHEV('M9 5l7 7-7 7')}</button>`;
+    if(list.length>1)count=`<p class="lb-count">${i+1} of ${list.length} ${what}s</p>`;
     pre=[prev,next].filter(x=>x&&x.fileId).map(x=>`<img hidden alt="" data-fid="${esc(x.fileId)}">`).join('');
-    back=`<button type="button" class="btn quiet" data-act="bdays" data-id="${p.childId}">All birthdays</button>`;
+    if(nav==='bday')back=`<button type="button" class="btn quiet" data-act="bdays" data-id="${p.childId}">All birthdays</button>`;
   }
-  $('#frm').innerHTML=`<div class="lightbox"><img src="${esc(photoSrc(p))}" data-fid="${esc(p.fileId||'')}" alt="${esc(p.caption||'Photo')}">${arrows}</div>${count}${pre}
-   <h2>${esc(p.caption||(c?c.name:'Photo'))}</h2><p class="muted">${fmtDate(p.date)}${c?' · '+esc(c.name)+' was '+ageText(c.dob,p.date)+' old':''}${p.birthday?' · birthday photo':''}</p>
-   <div class="dlg-acts"><div>${back}</div><div><button type="button" class="btn quiet" data-act="close">Close</button><button type="button" class="btn primary" data-act="edit" data-id="${id}">Edit</button></div></div>`;
+  const ttl=ent?ent.title:(p.caption||(c?c.name:'Photo'));
+  $('#frm').innerHTML=`<div class="lightbox"><img src="${esc(photoSrc(p))}" data-fid="${esc(p.fileId||'')}" alt="${esc(ttl)}">${arrows}</div>${count}${pre}
+   <h2>${esc(ttl)}</h2><p class="muted">${fmtDate(p.date)}${c?' · '+esc(c.name)+' was '+ageText(c.dob,p.date)+' old':''}${p.birthday?' · birthday photo':''}${ent?' · '+TYPES[entryType(ent)].label.toLowerCase():''}</p>
+   <div class="dlg-acts"><div>${back}</div><div><button type="button" class="btn quiet" data-act="close">Close</button><button type="button" class="btn primary" data-act="edit" data-id="${ent?p.entryId:id}">Edit</button></div></div>`;
   showDlg();
 }
 document.addEventListener('keydown',e=>{
+  const tg=e.target&&e.target.closest&&e.target.closest('[data-act="tooth"]');
+  if(tg&&(e.key==='Enter'||e.key===' ')){e.preventDefault();tg.dispatchEvent(new MouseEvent('click',{bubbles:true,detail:0}));return;}
   if(!$('#dlg').open||!$('#frm .lightbox'))return;
   const b=e.key==='ArrowLeft'?$('#frm .lb-nav.prev'):e.key==='ArrowRight'?$('#frm .lb-nav.next'):null;
   if(b){e.preventDefault();b.click();}
@@ -995,7 +1455,9 @@ $('#frm').addEventListener('submit',async ev=>{
     data={kind,childId,date,note:v('#f-note')};if(hc!==null)data.heightCm=hc;if(wk!==null)data.weightKg=wk;
   }else if(kind==='milestone'){
     const title=v('#f-title'),date=v('#f-date');if(!title)return fail('Say what happened.');if(!date)return fail('Add a date.');
-    data={kind,childId,title,date,category:v('#f-cat'),note:$('#f-note').value.trim()};
+    const typ=(document.querySelector('input[name="f-type"]:checked')||{}).value||'milestone',cat=v('#f-cat');
+    data={kind,childId,title,date,category:cat,note:$('#f-note').value.trim(),type:typ};
+    if(cat==='Teeth'){if(editing.teeth.size)data.teeth=ALLT.filter(c=>editing.teeth.has(c)).join(',');data.toothLost=!!editing.toothLost;}
   }else if(kind==='photo'){
     const date=v('#f-date'),old=id?R[id]:null;
     if(!date)return fail('Add the date the photo was taken.');
@@ -1017,17 +1479,32 @@ $('#frm').addEventListener('submit',async ev=>{
     data={kind,childId,title:v('#f-title'),body,written};
   }
   const nid=id||newId(kind),oa=editing.oldAsset;
-  const ok=await put(nid,data);
+  const ok=kind==='milestone'?await saveEntry(nid,data):await put(nid,data);
   if(ok&&oa)deletePhotoFile(oa);
   if(!ok){const btn=$('#frm button[type="submit"]');if(btn){btn.disabled=false;btn.textContent=id?'Save changes':'Add';}}
-  if(ok){closeForm();if(kind==='child'){view.child=nid;if(!id)view.tab='growth';}else{view.tab=kind==='measure'?'growth':kind==='letter'?'letters':'timeline';}render();toast(id?'Saved':kind==='child'?data.name+' added':kind==='letter'?'Letter saved':kind==='photo'?'Photo added':'Added');}
+  if(ok){closeForm();if(kind==='child'){view.child=nid;if(!id)view.tab='growth';}else if(view.child!=='home'&&!(kind==='milestone'&&view.tab==='teeth')){view.tab=kind==='measure'?'growth':kind==='letter'?'letters':'timeline';}
+    if(kind==='milestone'&&!id&&view.tab==='timeline'&&view.filter!=='all'&&view.filter!==data.type)view.filter='all';
+    render();toast(id?'Saved':kind==='child'?data.name+' added':kind==='letter'?'Letter saved':kind==='photo'?'Photo added':TYPES[data.type].label+' added');}
 });
 
 /* ---------- events ---------- */
 document.addEventListener('click',async ev=>{
   const b=ev.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
-  if(a==='child'){view.child=b.dataset.id;render();}
-  else if(a==='compare'){view.child='compare';render();}
+  if(a==='child'){view.child=b.dataset.id;render();window.scrollTo(0,0);}
+  else if(a==='home'){view.child='home';render();window.scrollTo(0,0);}
+  else if(a==='compare'){view.child='compare';render();window.scrollTo(0,0);}
+  else if(a==='goto'){view.child=b.dataset.id;view.tab=b.dataset.tab||'timeline';view.filter='all';render();window.scrollTo(0,0);}
+  else if(a==='filter'){view.filter=b.dataset.f;render();}
+  else if(a==='chooser'){openChooser();}
+  else if(a==='choose-kid'){if(editing&&editing.kind==='chooser'){editing.childId=b.dataset.id;$('#frm').innerHTML=chooserHtml();}}
+  else if(a==='choose'){if(!editing||editing.kind!=='chooser')return;const cid=editing.childId,ty=b.dataset.type;
+    if(ty==='photo')openForm('photo',null,{childId:cid});else openForm('milestone',null,{type:ty,childId:cid});}
+  else if(a==='add-for'){openForm(b.dataset.kind,null,{childId:b.dataset.child});}
+  else if(a==='add-tooth'){const n=teethState(cur(),view.child).count;openForm('milestone',null,n?{type:'note',category:'Teeth',title:'New tooth'}:{type:'milestone',category:'Teeth',title:'First tooth'});}
+  else if(a==='tooth'){if(!editing||!editing.teeth)return;const c=b.dataset.code;editing.teeth.has(c)?editing.teeth.delete(c):editing.teeth.add(c);renderPicker();
+    const nb=$(`#f-picker [data-code="${c}"]`);if(nb&&ev.detail===0)nb.focus();}
+  else if(a==='att-del'){if(!editing||!editing.newPhotos)return;
+    if(b.dataset.pid)editing.removed.add(b.dataset.pid);else{const [x]=editing.newPhotos.splice(+b.dataset.new,1);if(x&&!sample)URL.revokeObjectURL(x.url);}renderAtt();}
   else if(a==='tab'){view.tab=b.dataset.tab;render();}
   else if(a==='metric'){view.metric=b.dataset.m;render();}
   else if(a==='add'){openForm(b.dataset.kind,null);}
@@ -1047,16 +1524,19 @@ document.addEventListener('click',async ev=>{
 
   else if(a==='do-backup'){doBackup(b);}
   else if(a==='do-restore'){doRestore(b);}
-  else if(a==='edit'){const r=cur()[b.dataset.id];if(r)openForm(r.kind,b.dataset.id);}
+  else if(a==='edit'){const R=cur(),r=R[b.dataset.id];if(!r)return;if(r.kind==='photo'&&r.entryId&&R[r.entryId])openForm('milestone',r.entryId);else openForm(r.kind,b.dataset.id);}
   else if(a==='letter'){const id=b.dataset.id;openLetters.has(id)?openLetters.delete(id):openLetters.add(id);render();}
-  else if(a==='sample-on'){sampleRecs=buildSample();sample=true;view.child='ex_maya';view.tab='growth';render();}
-  else if(a==='sample-off'){sample=false;sampleRecs=null;view.child=null;render();}
+  else if(a==='sample-on'){sampleRecs=buildSample();sample=true;view.child='home';view.tab='growth';render();}
+  else if(a==='sample-off'){sample=false;sampleRecs=null;view.child='home';render();}
   else if(a==='close'){closeForm();}
   else if(a==='delete'){
     if(!editing)return;
     if(!deleteArmed){deleteArmed=true;b.classList.add('armed');b.textContent='Tap again to delete';const w=$('#del-warn');if(w)w.hidden=false;return;}
     const {kind,id}=editing;closeForm();
     if(kind==='child'){const kids=Object.entries(cur()).filter(([,v])=>v.childId===id).map(([k])=>k);for(const k of kids)await remove(k);}
+    if(kind==='milestone'){const lp=linkedPhotos(cur(),id).map(p=>cur()[p.id]);
+      if(await putMany([{id,del:true},...linkedPhotos(cur(),id).map(p=>({id:p.id,del:true}))]))lp.forEach(p=>{if(sample&&p.localUrl)URL.revokeObjectURL(p.localUrl);if(!sample&&okFid(p.fileId))deletePhotoFile(p.fileId);});
+      render();toast('Deleted');return;}
     await remove(id);if(view.child===id)view.child=null;render();toast('Deleted');
   }
 });
