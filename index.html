@@ -216,7 +216,23 @@ code{background:var(--sunk);padding:1px 6px;border-radius:6px;font-size:13px;ove
 .ph-item .t{grid-column:2;grid-row:1;align-self:end}
 .ph-item .rowbtn{grid-column:3;grid-row:1;align-self:start}
 .ph-item .d{grid-column:2;grid-row:2;align-self:start}
+.lightbox{position:relative;touch-action:pan-y}
 .lightbox img{width:100%;max-height:70dvh;object-fit:contain;border-radius:10px;background:var(--sunk)}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:none;padding:0;display:grid;place-items:center;background:rgba(255,255,255,.88);color:#262B22;box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:pointer}
+.lb-nav svg{width:22px;height:22px}
+.lb-nav.prev{left:8px}.lb-nav.next{right:8px}
+.lb-count{font-size:13px;color:var(--muted);text-align:center;margin-top:-6px}
+/* Milestone icons */
+.mi-ic{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--surface);color:var(--tq);vertical-align:-8px;margin-right:8px;flex:none}
+.mi-ic svg{width:17px;height:17px}
+/* Birthdays side by side */
+.bd-cmp{display:flex;flex-direction:column;gap:14px}
+.bd-cells{display:grid;grid-template-columns:repeat(var(--n),minmax(0,170px));gap:10px}
+.bd-names>span{font-size:13px;font-weight:600;display:flex;align-items:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bd-row h4{font-family:var(--f-display);font-weight:400;font-size:15px;margin:0 0 6px}
+.bd-cell{aspect-ratio:1;border-radius:12px;overflow:hidden;display:block;width:100%;padding:0;border:none;background:var(--sunk)}
+.bd-cell img{width:100%;height:100%;object-fit:cover;display:block}
+.bd-cell.none{background:transparent;border:1.5px dashed var(--line);display:grid;place-items:center;font-size:12.5px;color:var(--muted)}
 .preview{max-height:220px;width:100%;object-fit:contain;border-radius:10px;background:var(--sunk)}
 .check{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:600}
 .check input{width:18px;height:18px}
@@ -372,7 +388,54 @@ function buildSample(){
     body:'Dear Maya,\n\nToday you turned seven and asked for a cake shaped like a volcano. Dad stayed up until midnight making it erupt.\n\nYou are kind to your little brother even when he knocks down your towers. I hope you keep that.\n\nAll my love,\nMum'};
   R.ex_l2={kind:'letter',childId:'ex_theo',written:'2022-07-09',title:'Your first week',
     body:'Dear Theo,\n\nYou are one week old and you only sleep when someone is walking. We have walked a lot of miles around the kitchen.\n\nWelcome to the family.'};
+  // Made-up birthday "photos": simple drawings, so the example family can show the birthday features.
+  [['ex_maya','2019-03-14',0,'Hello, Maya',0],['ex_maya','2020-03-14',1,'Smash cake',1],['ex_maya','2021-03-14',2,'Balloons everywhere',0],['ex_maya','2022-03-12',3,'Party in the garden',1],
+   ['ex_maya','2024-03-14',5,'Unicorn cake',0],['ex_maya','2025-03-15',6,'Bowling party',1],['ex_maya','2026-03-14',7,'Volcano cake',0],['ex_maya','2026-03-21',7,'Second cake at Grandma\'s',1],
+   ['ex_theo','2022-07-02',0,'Hello, Theo',1],['ex_theo','2023-07-02',1,'First candle',0],['ex_theo','2024-07-03',2,'Digger cake',1],['ex_theo','2026-07-02',4,'Dinosaur party',0]
+  ].forEach((p,i)=>R['ex_ph'+i]={kind:'photo',childId:p[0],date:p[1],caption:p[3],birthday:true,localUrl:samplePic(p[2],p[0]==='ex_maya'?0:1,p[4])});
   return R;
+}
+function samplePic(age,tone,tall){
+  const W=tall?600:800,H=tall?800:600,bg=[['#E3F0D6','#C9E2B4'],['#DCEAF6','#BFD8EE']][tone],cx=W/2,by=H*0.72,n=Math.min(age,7);
+  let s=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></linearGradient></defs><rect width="${W}" height="${H}" fill="url(#g)"/>`;
+  if(age===0)s+=`<circle cx="${cx}" cy="${H*0.45}" r="${W*0.16}" fill="#FCE7B0"/><circle cx="${cx-W*0.05}" cy="${H*0.43}" r="7" fill="#5C6455"/><circle cx="${cx+W*0.05}" cy="${H*0.43}" r="7" fill="#5C6455"/><path d="M${cx-30} ${H*0.5}q30 24 60 0" stroke="#5C6455" stroke-width="6" fill="none" stroke-linecap="round"/>`;
+  else{s+=`<rect x="${cx-150}" y="${by-110}" width="300" height="110" rx="18" fill="#F7C9D2"/><rect x="${cx-150}" y="${by-60}" width="300" height="16" fill="#FFF"/><rect x="${cx-180}" y="${by}" width="360" height="16" rx="8" fill="#FFF"/>`;
+    for(let k=0;k<n;k++){const x=cx-((n-1)*30)/2+k*30;s+=`<rect x="${x-5}" y="${by-160}" width="10" height="50" rx="3" fill="#F2D27A"/><path d="M${x} ${by-188}q10 14 0 24q-10-10 0-24z" fill="#F29E4C"/>`;}}
+  s+=`<text x="${cx}" y="${H*0.16}" text-anchor="middle" font-family="Georgia,serif" font-size="56" fill="#262B22">${age===0?'Born':'Age '+age}</text></svg>`;
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s);
+}
+
+/* ---------- birthdays and milestone icons ---------- */
+const bdayYear=(c,p)=>Math.floor(monthsBetween(c.dob,p.date)/12);
+function bdayPick(c,ph,y){const bd=addYears(c.dob,y);return ph.filter(p=>p.birthday&&bdayYear(c,p)===y).sort((a,b)=>Math.abs(D(a.date)-D(bd))-Math.abs(D(b.date)-D(bd)))[0]||null;}
+function bdayList(R,cid){return recs(R,cid,'photo').filter(p=>p.birthday);}
+const IC={
+  steps:'<g fill="currentColor"><ellipse cx="7.5" cy="7.8" rx="2.7" ry="3.8"/><ellipse cx="7.5" cy="14.8" rx="2" ry="1.7"/><ellipse cx="16.5" cy="10.8" rx="2.7" ry="3.8"/><ellipse cx="16.5" cy="17.8" rx="2" ry="1.7"/></g>',
+  tooth:'<path d="M7.5 3.5c-2.3 0-3.8 1.9-3.5 4.4.3 2.2 1.2 3.4 1.6 5.6.4 2.6.6 6.5 2.2 6.5 1.6 0 1.4-4.6 4.2-4.6s2.6 4.6 4.2 4.6c1.6 0 1.8-3.9 2.2-6.5.4-2.2 1.3-3.4 1.6-5.6.3-2.5-1.2-4.4-3.5-4.4-1.8 0-2.6 1-4.5 1s-2.7-1-4.5-1z"/>',
+  words:'<path d="M4 4.5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-9l-4.5 3.5v-3.5H4a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1z"/><g fill="currentColor" stroke="none"><circle cx="8" cy="10.5" r="1.2"/><circle cx="12" cy="10.5" r="1.2"/><circle cx="16" cy="10.5" r="1.2"/></g>',
+  smile:'<circle cx="12" cy="12" r="8.5"/><path d="M8.5 14a4.5 4.5 0 0 0 7 0"/><g fill="currentColor" stroke="none"><circle cx="9" cy="10" r="1.1"/><circle cx="15" cy="10" r="1.1"/></g>',
+  school:'<path d="M9 7V5.5a3 3 0 0 1 6 0V7"/><rect x="5" y="7" width="14" height="13.5" rx="3.5"/><path d="M9 13.5h6v3.5H9z"/>',
+  bike:'<circle cx="6" cy="16" r="3.5"/><circle cx="18" cy="16" r="3.5"/><path d="M6 16l3.5-7h6L18 16M9.5 9l3 7H6M13.5 6.5h2.5l-.5 2.5"/>',
+  swim:'<path d="M3 9c1.5 0 1.5-1.5 3-1.5S7.5 9 9 9s1.5-1.5 3-1.5S13.5 9 15 9s1.5-1.5 3-1.5S19.5 9 21 9M3 13.5c1.5 0 1.5-1.5 3-1.5s1.5 1.5 3 1.5 1.5-1.5 3-1.5 1.5 1.5 3 1.5 1.5-1.5 3-1.5 1.5 1.5 3 1.5M3 18c1.5 0 1.5-1.5 3-1.5S7.5 18 9 18s1.5-1.5 3-1.5 1.5 1.5 3 1.5 1.5-1.5 3-1.5 1.5 1.5 3 1.5"/>',
+  hair:'<circle cx="6" cy="6.5" r="2.5"/><circle cx="6" cy="17.5" r="2.5"/><path d="M8.2 8L20 17.5M8.2 16L20 6.5"/>',
+  sleep:'<path d="M19.5 14.5A8 8 0 1 1 9.5 4.5a6.5 6.5 0 0 0 10 10z"/>'
+};
+const IC_RULES=[
+  ['tooth',/\b(tooth|teeth|toothy)\b/i,'Teeth'],
+  ['steps',/\b(steps?|walk|walks|walked|walking|toddled)\b/i],
+  ['swim',/\b(swim|swims|swam|swimming)\b/i],
+  ['bike',/\b(bike|bicycle|cycled|cycling|scooter|trike|stabilisers|stabilizers)\b/i],
+  ['hair',/\b(haircut|hair ?cut|hairdresser)\b/i],
+  ['sleep',/\b(slept|sleeps|sleeping) (all night|through)\b/i],
+  ['smile',/\b(smile|smiled|smiles|smiling|laugh|laughed|laughs|giggle|giggled)\b/i],
+  ['words',/\b(word|words|talk|talks|talked|talking|said|sentence)\b/i,'Words'],
+  ['school',/\b(school|nursery|reception|pre-?school|playgroup|year \d+)\b/i,'School']
+];
+function milestoneIcon(m){
+  const t=m.title||'';let k=null;
+  for(const [n,re] of IC_RULES)if(re.test(t)){k=n;break;}
+  if(!k)for(const [n,,cat] of IC_RULES)if(cat&&m.category===cat){k=n;break;}
+  return k?`<span class="mi-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg></span>`:'';
 }
 
 /* ---------- storage: a private app folder in your own Google Drive ---------- */
@@ -606,10 +669,9 @@ function birthdayStrip(c,ph){
   const t=todayStr(),years=Math.max(0,Math.floor(monthsBetween(c.dob,t)/12));
   let h='';
   for(let y=years;y>=0;y--){
-    const bd=addYears(c.dob,y);
-    const cands=ph.filter(p=>p.birthday&&Math.floor(monthsBetween(c.dob,p.date)/12)===y).sort((a,b)=>Math.abs(D(a.date)-D(bd))-Math.abs(D(b.date)-D(bd)));
+    const bd=addYears(c.dob,y),pk=bdayPick(c,ph,y);
     const lab=y===0?'The day you were born':ordinal(y)+' birthday';
-    if(cands[0])h+=`<button class="slot" data-act="photo" data-id="${cands[0].id}" aria-label="${esc(lab)} photo"><img src="${esc(photoSrc(cands[0]))}" data-fid="${esc(cands[0].fileId||'')}" alt="${esc(c.name+', '+lab)}" loading="lazy"><span class="lab">${y===0?'Born':esc(lab)}</span></button>`;
+    if(pk)h+=`<button class="slot" data-act="photo" data-nav="bday" data-id="${pk.id}" aria-label="${esc(lab)} photo"><img src="${esc(photoSrc(pk))}" data-fid="${esc(pk.fileId||'')}" alt="${esc(c.name+', '+lab)}" loading="lazy"><span class="lab">${y===0?'Born':esc(lab)}</span></button>`;
     else if(canPhotos())h+=`<button class="slot empty-slot" data-act="add-photo" data-date="${bd}" data-bday="1"><span class="lab">${y===0?'Born':esc(lab)}</span><span>${fmtDate(bd)}</span><span>+ Add photo</span></button>`;
     else h+=`<div class="slot empty-slot"><span class="lab">${y===0?'Born':esc(lab)}</span><span>${fmtDate(bd)}</span></div>`;
   }
@@ -637,7 +699,7 @@ function timelineView(c,mi,ph,kid){
       ?`<li class="ph-item"><button class="ph-btn" data-act="photo" data-id="${m.id}"><img src="${esc(photoSrc(m))}" data-fid="${esc(m.fileId||'')}" alt="${esc(m.caption||'Photo of '+c.name)}" loading="lazy"></button>
         <div class="t">${esc(m.caption||'Photo')}${m.birthday?'<span class="pill">Birthday</span>':''}</div><button class="rowbtn" data-act="edit" data-id="${m.id}">Edit</button>
         <div class="d">${fmtDate(m.date)} · ${ageText(c.dob,m.date)}</div></li>`
-      :`<li class="${CAT_TINT[m.category]||''}"><div class="t">${esc(m.title)}${m.category?`<span class="pill">${esc(m.category)}</span>`:''}</div><button class="rowbtn" data-act="edit" data-id="${m.id}">Edit</button>
+      :`<li class="${CAT_TINT[m.category]||''}"><div class="t">${milestoneIcon(m)}${esc(m.title)}${m.category?`<span class="pill">${esc(m.category)}</span>`:''}</div><button class="rowbtn" data-act="edit" data-id="${m.id}">Edit</button>
     <div class="d">${fmtDate(m.date)} · ${ageText(c.dob,m.date)}</div>${m.note?`<div class="nt">${esc(m.note)}</div>`:''}</li>`).join('')}</ul></div>`;
   });
   return h+'</div></section>';
@@ -681,7 +743,22 @@ function compareView(kids,R){
    ${rows.map(r=>`<tr><td>${r.a===0?'Birth':pl(r.a,'year')}</td>${r.cells.map(x=>`<td class="r">${x===null?'<span class="muted">—</span>':x+' '+unit}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'<p class="muted">Add measurements to compare them here.</p>'}
    </figure>
    <figure class="card"><figcaption>The door frame <span>latest heights, older marks faint</span></figcaption><div class="chart" data-chart="door"></div></figure>
-  </div></section>`;
+  </div>${birthdaysCompare(kids,R)}</section>`;
+}
+function birthdaysCompare(kids,R){
+  const t=todayStr(),info=kids.map(k=>({k,ph:recs(R,k.id,'photo').filter(p=>p.birthday),age:Math.max(0,Math.floor(monthsBetween(k.dob,t)/12))}));
+  const maxAge=Math.max(0,...info.map(x=>x.age));
+  let rows='';
+  for(let y=0;y<=maxAge;y++){
+    const picks=info.map(x=>y<=x.age?bdayPick(x.k,x.ph,y):null);
+    if(!picks.some(Boolean))continue;
+    rows+=`<div class="bd-row"><h4>${y===0?'Born':ordinal(y)+' birthday'}</h4><div class="bd-cells">${info.map((x,i)=>{const p=picks[i];
+      if(p)return `<button class="bd-cell" data-act="photo" data-nav="bday" data-id="${p.id}" aria-label="${esc(x.k.name)}, ${y===0?'born':ordinal(y)+' birthday'}"><img src="${esc(photoSrc(p))}" data-fid="${esc(p.fileId||'')}" alt="${esc(x.k.name)}" loading="lazy"></button>`;
+      return `<div class="bd-cell none">${y>x.age?'Not yet':'No photo'}</div>`;}).join('')}</div></div>`;
+  }
+  return `<figure class="card"><figcaption>Birthdays <span>each child at the same birthday</span></figcaption>
+   ${rows?`<div class="bd-cmp" style="--n:${kids.length}"><div class="bd-cells bd-names">${kids.map(k=>`<span><span class="dot-s" style="--kid:var(--c${k.color||0})"></span>${esc(k.name)}</span>`).join('')}</div>${rows}</div>`
+   :'<p class="muted">Mark photos as birthday photos and they\'ll line up here by age.</p>'}</figure>`;
 }
 
 /* ---------- charts ---------- */
@@ -801,13 +878,35 @@ function openForm(kind,id,preset){
 }
 function showDlg(){setTimeout(hydratePhotos,0);const dlg=$('#dlg');if(dlg.open)return;if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');}
 
-function openPhoto(id){
+const CHEV=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+function openPhoto(id,nav){
   const R=cur(),p=R[id];if(!p)return;const c=R[p.childId];editing=null;
-  $('#frm').innerHTML=`<div class="lightbox"><img src="${esc(photoSrc(p))}" data-fid="${esc(p.fileId||'')}" alt="${esc(p.caption||'Photo')}"></div>
+  let arrows='',count='',pre='',back='';
+  if(nav==='bday'&&p.birthday&&c){
+    const list=bdayList(R,p.childId),i=list.findIndex(x=>x.id===id),prev=list[i-1],next=list[i+1];
+    if(prev)arrows+=`<button type="button" class="lb-nav prev" data-act="photo" data-nav="bday" data-id="${prev.id}" aria-label="Previous birthday photo">${CHEV('M15 5l-7 7 7 7')}</button>`;
+    if(next)arrows+=`<button type="button" class="lb-nav next" data-act="photo" data-nav="bday" data-id="${next.id}" aria-label="Next birthday photo">${CHEV('M9 5l7 7-7 7')}</button>`;
+    if(list.length>1)count=`<p class="lb-count">${i+1} of ${list.length} birthday photos</p>`;
+    pre=[prev,next].filter(x=>x&&x.fileId).map(x=>`<img hidden alt="" data-fid="${esc(x.fileId)}">`).join('');
+    back=`<button type="button" class="btn quiet" data-act="bdays" data-id="${p.childId}">All birthdays</button>`;
+  }
+  $('#frm').innerHTML=`<div class="lightbox"><img src="${esc(photoSrc(p))}" data-fid="${esc(p.fileId||'')}" alt="${esc(p.caption||'Photo')}">${arrows}</div>${count}${pre}
    <h2>${esc(p.caption||(c?c.name:'Photo'))}</h2><p class="muted">${fmtDate(p.date)}${c?' · '+esc(c.name)+' was '+ageText(c.dob,p.date)+' old':''}${p.birthday?' · birthday photo':''}</p>
-   <div class="dlg-acts"><div></div><div><button type="button" class="btn quiet" data-act="close">Close</button><button type="button" class="btn primary" data-act="edit" data-id="${id}">Edit</button></div></div>`;
+   <div class="dlg-acts"><div>${back}</div><div><button type="button" class="btn quiet" data-act="close">Close</button><button type="button" class="btn primary" data-act="edit" data-id="${id}">Edit</button></div></div>`;
   showDlg();
 }
+document.addEventListener('keydown',e=>{
+  if(!$('#dlg').open||!$('#frm .lightbox'))return;
+  const b=e.key==='ArrowLeft'?$('#frm .lb-nav.prev'):e.key==='ArrowRight'?$('#frm .lb-nav.next'):null;
+  if(b){e.preventDefault();b.click();}
+});
+let swipeX=null,swipeY=null;
+$('#frm').addEventListener('touchstart',e=>{if(!e.target.closest('.lightbox')||e.touches.length!==1){swipeX=null;return;}swipeX=e.touches[0].clientX;swipeY=e.touches[0].clientY;},{passive:true});
+$('#frm').addEventListener('touchend',e=>{
+  if(swipeX===null)return;const t=e.changedTouches[0],dx=t.clientX-swipeX,dy=t.clientY-swipeY;swipeX=null;
+  if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy)*1.5)return;
+  const b=$(dx<0?'#frm .lb-nav.next':'#frm .lb-nav.prev');if(b)b.click();
+},{passive:true});
 
 let pendingRestore=null;
 function openBackup(){
@@ -933,7 +1032,7 @@ document.addEventListener('click',async ev=>{
   else if(a==='metric'){view.metric=b.dataset.m;render();}
   else if(a==='add'){openForm(b.dataset.kind,null);}
   else if(a==='add-photo'){openForm('photo',null,b.dataset.date?{date:b.dataset.date,bday:!!b.dataset.bday}:null);}
-  else if(a==='photo'){openPhoto(b.dataset.id);}
+  else if(a==='photo'){openPhoto(b.dataset.id,b.dataset.nav);}
   else if(a==='backup'){openBackup();}
   else if(a==='bdays'){openBirthdays(b.dataset.id);}
   else if(a==='connect'){connect();}
