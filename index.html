@@ -10,6 +10,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Sprout">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script>try{var th=localStorage.getItem('sprout-theme');if(th==='light'||th==='dark')document.documentElement.dataset.theme=th;}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&family=Caveat:wght@500;700&display=swap">
@@ -35,6 +38,7 @@
   --c0:#9CCB6B; --c1:#8FB0EE; --c2:#F0A06E; --c3:#EB8FB5; --c4:#E2C35A;
   --p0:#2C3A22; --p1:#232C40; --p2:#3D2A1F; --p3:#3A2330; --p4:#3A3317;
   --q0:#C9E3A6; --q1:#B9CBF2; --q2:#F6C3A0; --q3:#F0B5CC; --q4:#EFD889; color-scheme:dark}}
+:root[data-theme="light"]{color-scheme:light}
 :root[data-theme="dark"]{
   --bg:#141912; --surface:#1C2319; --sunk:#252E21; --ink:#E8EDE1; --muted:#A2AC97; --line:#33402D;
   --accent:#C9E3A6; --accent-ink:#1A2312; --paper:#1F271C; --paper-line:#2E3929;
@@ -44,6 +48,7 @@
   --q0:#C9E3A6; --q1:#B9CBF2; --q2:#F6C3A0; --q3:#F0B5CC; --q4:#EFD889; color-scheme:dark}
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 48px}
 #app{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
@@ -69,6 +74,8 @@ button{cursor:pointer}
 .top{display:flex;flex-direction:column;gap:14px}
 .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .brand h1{font-size:26px}
+.brand .logo{width:34px;height:34px;flex:none;align-self:center;margin-right:-2px}
+.btn.theme{padding:8px;width:40px;justify-content:center}.btn.theme svg{width:18px;height:18px}
 .brand .hand{font-family:var(--f-hand);font-size:22px;color:var(--muted)}
 .kids{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px 7px 10px;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px}
@@ -561,9 +568,12 @@ const IC={
   health:'<circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/>',
   pencil:'<path d="M15.5 4.5l4 4L9 19H5v-4z"/><path d="M13 7l4 4"/>',
   camera:'<path d="M4 8.5a1.5 1.5 0 0 1 1.5-1.5h2.5l1.5-2h5l1.5 2h2.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/><circle cx="12" cy="12.5" r="3.5"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>',
+  moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
   house:'<path d="M4 11l8-6.5 8 6.5M6.5 9.5V19.5h11V9.5"/><path d="M10 19.5v-5h4v5"/>',
   plus:'<path d="M12 5v14M5 12h14"/>'
 };
+const LOGO='<svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="var(--p0)"/><path d="M6.5 26.2c2.7-2.3 5.9-3.4 9.5-3.4s6.8 1.1 9.5 3.4z" fill="var(--c2)" opacity=".5"/><path d="M16 23.2c0-3.2-.1-5.8.3-8.4" fill="none" stroke="var(--c0)" stroke-width="2" stroke-linecap="round"/><path d="M16.3 15.2c.3-4.4 3.5-7.2 8.4-7 .2 4.8-3.2 7.7-8.4 7z" fill="var(--c0)"/><path d="M15.9 17.6c-.7-3.7-3.6-5.8-7.6-5.3-.1 4 2.9 6.2 7.6 5.3z" fill="var(--c0)" opacity=".72"/></svg>';
 const icon=(k,sw)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw||1.8}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[k]}</svg>`;
 const IC_RULES=[
   ['tooth',/\b(tooth|teeth|toothy|molars?|canines?)\b/i,'Teeth'],
@@ -828,8 +838,18 @@ function render(){
   app.innerHTML=h;drawCharts();hydratePhotos();remember();
 }
 
+/* light / dark: follows the phone unless chosen here (saved on this device only) */
+const isDark=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;};
+function themeBtn(){const d=isDark();return `<button class="btn quiet theme" data-act="theme" aria-label="${d?'Switch to light look':'Switch to dark look'}" title="${d?'Light look':'Dark look'}">${icon(d?'sun':'moon',2)}</button>`;}
+function setTheme(){
+  const sys=matchMedia('(prefers-color-scheme: dark)').matches,want=isDark()?'light':'dark';
+  if((want==='dark')===sys){delete document.documentElement.dataset.theme;try{localStorage.removeItem('sprout-theme');}catch(e){}}
+  else{document.documentElement.dataset.theme=want;try{localStorage.setItem('sprout-theme',want);}catch(e){}}
+  const bg=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m=>m.setAttribute('content',bg));
+}
 function header(kids){
-  return `<header class="top"><div class="brand"><h1>Sprout</h1><span class="hand">${sample?'the example family':'our family'}</span><span class="spacer"></span>${!sample&&status==='ready'?'<button class="btn" data-act="backup">Back up</button><button class="btn quiet" data-act="lock" title="Close your book on this device until you sign in again">Lock</button>':''}</div>
+  return `<header class="top"><div class="brand">${LOGO}<h1>Sprout</h1><span class="hand">${sample?'the example family':'our family'}</span><span class="spacer"></span>${themeBtn()}${!sample&&status==='ready'?'<button class="btn" data-act="backup">Back up</button><button class="btn quiet" data-act="lock" title="Close your book on this device until you sign in again">Lock</button>':''}</div>
   <nav class="kids" aria-label="Children"><button class="chip home" data-act="home" aria-pressed="${view.child==='home'}">${icon('house',2)}Home</button>${kids.map(k=>`<button class="chip" style="--kid:var(--c${k.color||0});--kidp:var(--p${k.color||0})" data-act="child" data-id="${k.id}" aria-pressed="${view.child===k.id}"><span class="dot"></span>${esc(k.name)}</button>`).join('')}
   ${kids.length>1?`<button class="chip cmp" data-act="compare" aria-pressed="${view.child==='compare'}"><span class="dot"></span>Side by side</button>`:''}
   <button class="chip add" data-act="add" data-kind="child">+ Add a child</button></nav></header>`;
@@ -837,7 +857,7 @@ function header(kids){
 
 function welcome(){
   const msg='';
-  return `<header class="top"><div class="brand"><h1>Sprout</h1><span class="hand">our family</span></div></header>
+  return `<header class="top"><div class="brand">${LOGO}<h1>Sprout</h1><span class="hand">our family</span><span class="spacer"></span>${themeBtn()}</div></header>
   <section class="welcome"><div><h2>A place for the pencil marks on the door frame.</h2>
   <p>Give each child their own page for heights and weights, the milestones you want to remember, and letters for them to open when they're older. Put everyone side by side on one chart whenever you like.</p>
   <ul><li>Growth in cm and kg, charted by age</li><li>A timeline of milestones, notes, memories and photos</li><li>A picture of their teeth, tooth by tooth</li><li>Letters for them to read when they're older</li></ul>
@@ -847,7 +867,7 @@ function welcome(){
   <div class="mini-door chart" data-chart="welcomeDoor"></div></section>`;
 }
 function gateView(){
-  const head=`<header class="top"><div class="brand"><h1>Sprout</h1><span class="hand">our family</span></div></header>`;
+  const head=`<header class="top"><div class="brand">${LOGO}<h1>Sprout</h1><span class="hand">our family</span><span class="spacer"></span>${themeBtn()}</div></header>`;
   const ex='<button class="btn" data-act="sample-on">Look around an example family</button>';
   if(status==='file')return head+`<section class="welcome"><div><h2>Put this file on the web first</h2><p>Google only lets an app use your Drive from a web address, not from a file opened straight from your device. Upload this file to a free host such as GitHub Pages, then open it from there.</p><div class="acts">${ex}</div></div></section>`;
   if(status==='setup')return head+setupView();
@@ -1082,10 +1102,9 @@ const kidVars=k=>{const n=k.color||0;return `--kid:var(--c${n});--kidp:var(--p${
 function nextBday(k,t){let y=Math.max(0,Math.floor(monthsBetween(k.dob,t)/12));const today=addYears(k.dob,y)===t;if(!today)y++;return {y,date:addYears(k.dob,y),today};}
 const dayMonth=s=>new Date(D(s)).toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'});
 function kidCard(k,R,t){
-  const ms=recs(R,k.id,'measure'),lh=lastWith(ms,'heightCm'),ts=teethState(R,k.id),nb=nextBday(k,t);
+  const ms=recs(R,k.id,'measure'),lh=lastWith(ms,'heightCm'),nb=nextBday(k,t);
   const pic=recs(R,k.id,'photo',true)[0],last=timelineItems(R,k.id)[0],facts=[];
   if(lh)facts.push(fmt1(lh.m.heightCm)+' cm');
-  if(ts.count&&monthsBetween(k.dob,t)<96)facts.push(plw(ts.count,'tooth','teeth'));
   facts.push(nb.today?'Birthday today!':`${nb.y===0?'Born':ordinal(nb.y)+' birthday'} ${untilText(nb.date)}`);
   return `<button class="kcard" style="${kidVars(k)}" data-act="child" data-id="${k.id}">
    <span class="kc-ph">${pic?`<img src="${esc(photoSrc(pic))}" data-fid="${esc(pic.fileId||'')}" alt="" loading="lazy">`:esc((k.name||'?').slice(0,1))}</span>
@@ -1194,6 +1213,8 @@ function drawCharts(){
   if($('[data-chart="welcomeDoor"]'))welcomeDoorSpec();
   document.querySelectorAll('[data-chart]').forEach(el=>{const s=chartSpecs[el.dataset.chart];if(!s)return;const w=Math.max(240,Math.floor(el.clientWidth));el.innerHTML=s.type==='door'?doorChart(s,w):s.type==='mouth'?mouthSVG(s,Math.min(w,620)):lineChart(s,w);});
 }
+if(document.documentElement.dataset.theme){const bg=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();document.querySelectorAll('meta[name="theme-color"]').forEach(m=>m.setAttribute('content',bg));}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>render());
 let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(drawCharts,120);});
 
 /* ---------- forms ---------- */
@@ -1490,6 +1511,7 @@ $('#frm').addEventListener('submit',async ev=>{
 /* ---------- events ---------- */
 document.addEventListener('click',async ev=>{
   const b=ev.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  if(a==='theme'){setTheme();render();return;}
   if(a==='child'){view.child=b.dataset.id;render();window.scrollTo(0,0);}
   else if(a==='home'){view.child='home';render();window.scrollTo(0,0);}
   else if(a==='compare'){view.child='compare';render();window.scrollTo(0,0);}
